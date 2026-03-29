@@ -235,7 +235,7 @@
 
                         <div class="analysis-card">
                             <div class="analysis-img-wrap">
-                                <img src="roccurve.png" alt="ROC Egrisi" class="analysis-img">
+                                <img src="roccurve.png" alt="ROC Egrisi" class="analysis-img" onclick="openLightbox(this)">
                             </div>
                             <div class="analysis-info">
                                 <h4 class="analysis-title">ROC Egrisi</h4>
@@ -246,7 +246,7 @@
 
                         <div class="analysis-card">
                             <div class="analysis-img-wrap">
-                                <img src="PrecisionRecallCurve.png" alt="Hassasiyet-Duyarlilik Egrisi" class="analysis-img">
+                                <img src="PrecisionRecallCurve.png" alt="Hassasiyet-Duyarlilik Egrisi" class="analysis-img" onclick="openLightbox(this)">
                             </div>
                             <div class="analysis-info">
                                 <h4 class="analysis-title">Hassasiyet-Duyarlilik Egrisi</h4>
@@ -257,7 +257,7 @@
 
                         <div class="analysis-card">
                             <div class="analysis-img-wrap">
-                                <img src="PredictionProbability.png" alt="Tahmin Olasiligi Dagilimi" class="analysis-img">
+                                <img src="PredictionProbability.png" alt="Tahmin Olasiligi Dagilimi" class="analysis-img" onclick="openLightbox(this)">
                             </div>
                             <div class="analysis-info">
                                 <h4 class="analysis-title">Tahmin Olasiligi Dagilimi</h4>
@@ -268,7 +268,7 @@
 
                         <div class="analysis-card">
                             <div class="analysis-img-wrap">
-                                <img src="FeatureImportance.png" alt="Oznitelik Onem Derecesi" class="analysis-img">
+                                <img src="FeatureImportance.png" alt="Oznitelik Onem Derecesi" class="analysis-img" onclick="openLightbox(this)">
                             </div>
                             <div class="analysis-info">
                                 <h4 class="analysis-title">Oznitelik Onem Derecesi</h4>
@@ -279,7 +279,7 @@
 
                         <div class="analysis-card">
                             <div class="analysis-img-wrap">
-                                <img src="tahminolasilikdagilimi.png" alt="Egitim Loss ve Accuracy" class="analysis-img">
+                                <img src="tahminolasilikdagilimi.png" alt="Egitim Loss ve Accuracy" class="analysis-img" onclick="openLightbox(this)">
                             </div>
                             <div class="analysis-info">
                                 <h4 class="analysis-title">Egitim ve Dogrulama Grafikleri</h4>
@@ -290,7 +290,7 @@
 
                         <div class="analysis-card">
                             <div class="analysis-img-wrap">
-                                <img src="RegionalAnalysis.png" alt="Bolgesel Zaman Serisi Analizi" class="analysis-img">
+                                <img src="RegionalAnalysis.png" alt="Bolgesel Zaman Serisi Analizi" class="analysis-img" onclick="openLightbox(this)">
                             </div>
                             <div class="analysis-info">
                                 <h4 class="analysis-title">Bolgesel Zaman Serisi Analizi</h4>
@@ -301,7 +301,7 @@
 
                         <div class="analysis-card">
                             <div class="analysis-img-wrap">
-                                <img src="Featuredistribution.png" alt="Oznitelik Dagilim Analizi" class="analysis-img">
+                                <img src="Featuredistribution.png" alt="Oznitelik Dagilim Analizi" class="analysis-img" onclick="openLightbox(this)">
                             </div>
                             <div class="analysis-info">
                                 <h4 class="analysis-title">Oznitelik Dagilim Analizi</h4>
@@ -312,7 +312,7 @@
 
                         <div class="analysis-card">
                             <div class="analysis-img-wrap">
-                                <img src="ErrorAnalysis.png" alt="Hata Analizi Zaman Cizelgesi" class="analysis-img">
+                                <img src="ErrorAnalysis.png" alt="Hata Analizi Zaman Cizelgesi" class="analysis-img" onclick="openLightbox(this)">
                             </div>
                             <div class="analysis-info">
                                 <h4 class="analysis-title">Hata Analizi Zaman Cizelgesi</h4>
@@ -323,7 +323,7 @@
 
                         <div class="analysis-card">
                             <div class="analysis-img-wrap">
-                                <img src="IntensityAnalysis.png" alt="Siddet Seviyesi Performansi" class="analysis-img">
+                                <img src="IntensityAnalysis.png" alt="Siddet Seviyesi Performansi" class="analysis-img" onclick="openLightbox(this)">
                             </div>
                             <div class="analysis-info">
                                 <h4 class="analysis-title">Siddet Seviyesi Performansi</h4>
@@ -440,8 +440,10 @@
         </main>
     </div>
 
+    <div id="lightbox" onclick="closeLightbox(event)"><button class="lb-close" onclick="closeLightbox()">&times;</button><img id="lb-img" src="" alt=""></div>
     <script src="app.js"></script>
     <script src="model.js"></script>
     <script src="logs.js"></script>
+    <script>function openLightbox(img){var lb=document.getElementById('lightbox');document.getElementById('lb-img').src=img.src;document.getElementById('lb-img').alt=img.alt;lb.classList.add('active');document.body.style.overflow='hidden';}function closeLightbox(e){if(e&&e.target===document.getElementById('lb-img'))return;document.getElementById('lightbox').classList.remove('active');document.body.style.overflow='';}document.addEventListener('keydown',function(e){if(e.key==='Escape')closeLightbox();});</script>
 </body>
 </html>
