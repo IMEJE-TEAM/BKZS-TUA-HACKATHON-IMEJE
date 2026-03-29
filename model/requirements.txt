@@ -1,4 +1,4 @@
-tensorflow>=2.21.0
+tensorflow-cpu>=2.15.0
 keras>=3.13.2
 numpy>=2.4.3
 pandas>=3.0.1
@@ -9,3 +9,7 @@ h5py>=3.14.0
 joblib>=1.5.3
 pillow>=12.1.1
 rich>=14.3.3
+
+fastapi
+uvicorn
+websockets
