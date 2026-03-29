@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IMEJE-BKZS | Canli Simulasyon</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="index.html" class="nav-logo">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                <circle cx="14" cy="14" r="12" stroke="#6366f1" stroke-width="2" fill="none"/>
+                <circle cx="14" cy="14" r="6" stroke="#10b981" stroke-width="1.5" fill="none"/>
+                <circle cx="14" cy="14" r="2.5" fill="#6366f1"/>
+                <line x1="14" y1="2" x2="14" y2="6" stroke="#6366f1" stroke-width="1.2"/>
+                <line x1="14" y1="22" x2="14" y2="26" stroke="#6366f1" stroke-width="1.2"/>
+                <line x1="2" y1="14" x2="6" y2="14" stroke="#6366f1" stroke-width="1.2"/>
+                <line x1="22" y1="14" x2="26" y2="14" stroke="#6366f1" stroke-width="1.2"/>
+            </svg>
+            <div>
+                <span class="nav-brand">IMEJE-BKZS</span>
+                <span class="nav-sub">GNSS Anti-Spoofing</span>
+            </div>
+        </a>
+        <div class="nav-links">
+            <a href="index.html" class="nav-link active">Simulasyon</a>
+            <a href="model.html" class="nav-link">Model</a>
+            <a href="logs.html" class="nav-link">Loglar</a>
+        </div>
+        <div class="nav-indicator" id="nav-indicator">
+            <span class="indicator-dot"></span>
+            <span>Hazir</span>
+        </div>
+    </nav>
+
+    <main class="main">
+
+        <!-- Stat Cards -->
+        <section class="stats-row">
+            <div class="stat-card">
+                <div class="stat-card-icon purple">📊</div>
+                <span class="stat-card-val" id="s-processed">0</span>
+                <span class="stat-card-label">Islenen Satir</span>
+                <div class="stat-card-bar"><div class="stat-card-bar-fill" id="s-processed-bar" style="background:var(--purple)"></div></div>
+                <div class="stat-card-desc">Modelin isledigini toplam veri sayisi</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card-icon green">✓</div>
+                <span class="stat-card-val" id="s-precision">0.000</span>
+                <span class="stat-card-label">Precision</span>
+                <div class="stat-card-bar"><div class="stat-card-bar-fill" id="s-precision-bar" style="background:var(--green)"></div></div>
+                <div class="stat-card-desc">Spoofing dediginin kaci gercekten spoofing</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card-icon amber">◎</div>
+                <span class="stat-card-val" id="s-recall">0.000</span>
+                <span class="stat-card-label">Recall</span>
+                <div class="stat-card-bar"><div class="stat-card-bar-fill" id="s-recall-bar" style="background:var(--amber)"></div></div>
+                <div class="stat-card-desc">Gercek saldirilardan kaci yakalandi</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card-icon blue">⚡</div>
+                <span class="stat-card-val" id="s-f1">0.000</span>
+                <span class="stat-card-label">F1 Score</span>
+                <div class="stat-card-bar"><div class="stat-card-bar-fill" id="s-f1-bar" style="background:var(--blue)"></div></div>
+                <div class="stat-card-desc">Precision ve Recall'in harmonik ortalamasi</div>
+            </div>
+        </section>
+
+        <!-- Alarm -->
+        <div id="alarm"></div>
+
+        <!-- Pre-sim: Hero + dashboard content -->
+        <div id="presim-area">
+            <section class="hero-section">
+                <img src="imeje.png" alt="IMEJE Logo" class="hero-logo" id="hero-logo">
+                <h1 class="hero-title">GNSS Anti-Spoofing Simulasyonu</h1>
+                <p class="hero-sub">CRNN tabanli derin ogrenme modeli ile gercek zamanli spoofing tespiti</p>
+                <button class="hero-btn" id="btn-start">▶ Simulasyonu Baslat</button>
+            </section>
+
+            <section class="presim-grid">
+                <div class="card">
+                    <div class="card-header"><h2 class="card-title">Model Ozeti</h2></div>
+                    <div class="card-body">
+                        <div class="presim-info-list">
+                            <div class="presim-info-item"><span class="pi-dot" style="background:var(--purple)"></span><span class="pi-label">Mimari</span><span class="pi-val">Conv1D + BiLSTM (CRNN)</span></div>
+                            <div class="presim-info-item"><span class="pi-dot" style="background:var(--green)"></span><span class="pi-label">Zaman Adimi</span><span class="pi-val">30 ardisik olcum</span></div>
+                            <div class="presim-info-item"><span class="pi-dot" style="background:var(--amber)"></span><span class="pi-label">Esik Degeri</span><span class="pi-val">0.50 (sigmoid cikis)</span></div>
+                            <div class="presim-info-item"><span class="pi-dot" style="background:var(--blue)"></span><span class="pi-label">Egitim</span><span class="pi-val">10 epoch, Adam optimizer</span></div>
+                            <div class="presim-info-item"><span class="pi-dot" style="background:var(--red)"></span><span class="pi-label">Veri Seti</span><span class="pi-val">30,000 test verisi</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><h2 class="card-title">GNSS Ozellikleri (6 Feature)</h2></div>
+                    <div class="card-body">
+                        <div class="presim-info-list">
+                            <div class="presim-info-item"><span class="pi-dot" style="background:var(--purple)"></span><span class="pi-label">mean_prRes</span><span class="pi-val">Pseudorange residual ortalamasi</span></div>
+                            <div class="presim-info-item"><span class="pi-dot" style="background:var(--green)"></span><span class="pi-label">std_prRes</span><span class="pi-val">Pseudorange residual std sapmasi</span></div>
+                            <div class="presim-info-item"><span class="pi-dot" style="background:var(--amber)"></span><span class="pi-label">max_prRes</span><span class="pi-val">Pseudorange residual maksimumi</span></div>
+                            <div class="presim-info-item"><span class="pi-dot" style="background:var(--blue)"></span><span class="pi-label">mean_cno</span><span class="pi-val">Ortalama sinyal-gurultu orani</span></div>
+                            <div class="presim-info-item"><span class="pi-dot" style="background:var(--red)"></span><span class="pi-label">std_cno</span><span class="pi-val">CNO standart sapmasi</span></div>
+                            <div class="presim-info-item"><span class="pi-dot" style="background:var(--purple)"></span><span class="pi-label">cno_elev</span><span class="pi-val">CNO / yukseklik aci orani</span></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Simulation Area (hidden until start) -->
+        <section class="card card-sim" id="sim-section" style="display:none;">
+            <div class="card-header">
+                <h2 class="card-title">Canli GNSS Simulasyonu</h2>
+                <div class="card-header-right">
+                    <div class="sim-legend">
+                        <span class="lg"><span class="lg-dot" style="background:#10b981"></span>Normal</span>
+                        <span class="lg"><span class="lg-dot" style="background:#ef4444"></span>Spoofing</span>
+                        <span class="lg"><span class="lg-dot" style="background:#6366f1"></span>Model</span>
+                        <span class="lg"><span class="lg-line"></span>Esik (0.50)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="loading" class="sim-placeholder" style="display:none;">
+                <div class="spinner"></div>
+                <p>Veri yukleniyor...</p>
+            </div>
+
+            <!-- Sim body: charts + side panel -->
+            <div id="sim-body" class="sim-body" style="display:none;">
+                <div class="sim-charts">
+                    <div id="charts"></div>
+                </div>
+                <div class="sim-side">
+                    <!-- Progress -->
+                    <div>
+                        <div class="progress-header">
+                            <span class="progress-title">Ilerleme</span>
+                            <span class="progress-pct" id="progress-pct">0%</span>
+                        </div>
+                        <div class="progress-bar-track"><div class="progress-bar-fill" id="progress-fill"></div></div>
+                        <div class="progress-detail" id="progress-detail">0 / 30,000</div>
+                    </div>
+                    <div class="divider"></div>
+                    <!-- Confusion Matrix -->
+                    <div>
+                        <div class="mini-log-title">Confusion Matrix</div>
+                        <table class="cm-table">
+                            <thead><tr><th></th><th>Tahmin:N</th><th>Tahmin:S</th></tr></thead>
+                            <tbody>
+                                <tr><td class="cm-rl">Gercek:N</td><td class="cm-c cm-tn" id="cm-tn">0</td><td class="cm-c cm-fp" id="cm-fp">0</td></tr>
+                                <tr><td class="cm-rl">Gercek:S</td><td class="cm-c cm-fn" id="cm-fn">0</td><td class="cm-c cm-tp" id="cm-tp">0</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="divider"></div>
+                    <!-- Feature distributions -->
+                    <div>
+                        <div class="dist-title">Feature Dagilimi</div>
+                        <div id="dist-bars"></div>
+                    </div>
+                    <div class="divider"></div>
+                    <!-- Mini log feed -->
+                    <div>
+                        <div class="mini-log-title">Son Olaylar</div>
+                        <div class="mini-log-feed" id="mini-log-feed"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="sim-footer" class="sim-footer" style="display:none;">
+                <div class="sf-left">
+                    <button class="btn btn-sm" id="btn-pause">⏸ Duraklat</button>
+                    <button class="btn btn-sm" id="btn-speed-down">−</button>
+                    <span class="speed-val" id="speed-display">5x</span>
+                    <button class="btn btn-sm" id="btn-speed-up">+</button>
+                    <button class="btn btn-sm btn-outline" id="btn-reset">↺ Sifirla</button>
+                </div>
+                <span class="sf-status" id="sim-status-text"></span>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>

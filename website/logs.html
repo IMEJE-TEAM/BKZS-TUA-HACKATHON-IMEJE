@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IMEJE-BKZS | Canli Log Akisi</title>
+    <link rel="stylesheet" href="style.css">
+    <style>html,body{height:100%;overflow:hidden}</style>
+</head>
+<body style="display:flex;flex-direction:column;height:100vh;overflow:hidden">
+
+    <nav class="navbar">
+        <a href="index.html" class="nav-logo">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                <circle cx="14" cy="14" r="12" stroke="#6366f1" stroke-width="2" fill="none"/>
+                <circle cx="14" cy="14" r="6" stroke="#10b981" stroke-width="1.5" fill="none"/>
+                <circle cx="14" cy="14" r="2.5" fill="#6366f1"/>
+                <line x1="14" y1="2" x2="14" y2="6" stroke="#6366f1" stroke-width="1.2"/>
+                <line x1="14" y1="22" x2="14" y2="26" stroke="#6366f1" stroke-width="1.2"/>
+                <line x1="2" y1="14" x2="6" y2="14" stroke="#6366f1" stroke-width="1.2"/>
+                <line x1="22" y1="14" x2="26" y2="14" stroke="#6366f1" stroke-width="1.2"/>
+            </svg>
+            <div><span class="nav-brand">IMEJE-BKZS</span><span class="nav-sub">GNSS Anti-Spoofing</span></div>
+        </a>
+        <div class="nav-links">
+            <a href="index.html" class="nav-link">Simulasyon</a>
+            <a href="model.html" class="nav-link">Model</a>
+            <a href="logs.html" class="nav-link active">Loglar</a>
+        </div>
+        <div class="nav-indicator"><span class="indicator-dot" style="background:#10b981"></span><span>Aktif</span></div>
+    </nav>
+
+    <div class="logs-page">
+        <main class="main">
+
+            <!-- Summary Cards -->
+            <section class="log-summary-grid">
+                <div class="log-summary-card">
+                    <span class="lsc-val" id="lsc-total">0</span>
+                    <span class="lsc-label">Islenen Satir</span>
+                    <div class="lsc-bar"><div class="lsc-bar-fill" id="lsc-bar-total" style="width:0%;background:var(--purple)"></div></div>
+                </div>
+                <div class="log-summary-card">
+                    <span class="lsc-val text-red" id="lsc-spoof">0</span>
+                    <span class="lsc-label">Spoofing Tespit</span>
+                    <div class="lsc-bar"><div class="lsc-bar-fill" id="lsc-bar-spoof" style="width:0%;background:var(--red)"></div></div>
+                </div>
+                <div class="log-summary-card">
+                    <span class="lsc-val text-green" id="lsc-normal">0</span>
+                    <span class="lsc-label">Normal Sinyal</span>
+                    <div class="lsc-bar"><div class="lsc-bar-fill" id="lsc-bar-normal" style="width:0%;background:var(--green)"></div></div>
+                </div>
+                <div class="log-summary-card">
+                    <span class="lsc-val text-amber" id="lsc-rate">0%</span>
+                    <span class="lsc-label">Spoofing Orani</span>
+                    <div class="lsc-bar"><div class="lsc-bar-fill" id="lsc-bar-rate" style="width:0%;background:var(--amber)"></div></div>
+                </div>
+            </section>
+
+            <!-- Controls -->
+            <section class="card" style="flex-shrink:0">
+                <div class="card-body" style="padding:10px 16px">
+                    <div class="logs-toolbar">
+                        <button class="btn btn-primary btn-sm" id="btn-play">▶ Baslat</button>
+                        <button class="btn btn-outline btn-sm" id="btn-pause" disabled>Duraklat</button>
+
+                        <label for="log-speed">Hiz:</label>
+                        <select id="log-speed">
+                            <option value="1">1x</option>
+                            <option value="2">2x</option>
+                            <option value="5" selected>5x</option>
+                            <option value="10">10x</option>
+                            <option value="50">50x</option>
+                        </select>
+
+                        <span class="toolbar-sep"></span>
+
+                        <label for="filter-type">Filtre:</label>
+                        <select id="filter-type">
+                            <option value="all">Tumu</option>
+                            <option value="spoof">Spoofing</option>
+                            <option value="normal">Normal</option>
+                            <option value="transition">Gecisler</option>
+                        </select>
+
+                        <input type="text" id="filter-search" placeholder="Ara..." style="width:110px">
+                        <span class="toolbar-sep"></span>
+                        <button class="btn btn-sm" id="btn-export">CSV</button>
+                        <button class="btn btn-sm btn-danger" id="btn-clear">Temizle</button>
+
+                        <span class="toolbar-right">
+                            <label><input type="checkbox" id="chk-autoscroll" checked> Oto-Kaydirma</label>
+                        </span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VS Code Terminal Panel -->
+            <div class="term-card" id="term-card">
+                <div class="term-header">
+                    <div class="term-header-left">
+                        <div class="term-dots">
+                            <span class="term-dot-red"></span>
+                            <span class="term-dot-yellow"></span>
+                            <span class="term-dot-green"></span>
+                        </div>
+                        <span class="term-title">
+                            <span class="stream-dot" id="stream-dot"></span>
+                            gnss-monitor — bash
+                        </span>
+                    </div>
+                    <div class="term-header-right">
+                        <span class="term-badge term-badge-purple" id="log-count">0 kayit</span>
+                        <span class="term-badge term-badge-purple" id="timeline-progress">0%</span>
+                    </div>
+                </div>
+                <div class="term-body" id="log-stream">
+                    <div class="term-empty" id="stream-empty">
+                        <span class="term-prompt">$</span>
+                        <p>gnss-monitor --mode=realtime --model=crnn</p>
+                        <p style="color:var(--term-dim)">Log akisini baslatmak icin yukaridaki <b>Baslat</b> butonunu kullanin.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="loading-logs" class="sim-placeholder" style="display:none">
+                <div class="spinner"></div>
+                <p>Veri yukleniyor...</p>
+            </div>
+
+        </main>
+    </div>
+
+    <script src="logs.js"></script>
+</body>
+</html>

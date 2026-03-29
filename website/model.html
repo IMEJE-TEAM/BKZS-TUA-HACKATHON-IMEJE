@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IMEJE-BKZS | Model & Egitim</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="index.html" class="nav-logo">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                <circle cx="14" cy="14" r="12" stroke="#6366f1" stroke-width="2" fill="none"/>
+                <circle cx="14" cy="14" r="6" stroke="#10b981" stroke-width="1.5" fill="none"/>
+                <circle cx="14" cy="14" r="2.5" fill="#6366f1"/>
+                <line x1="14" y1="2" x2="14" y2="6" stroke="#6366f1" stroke-width="1.2"/>
+                <line x1="14" y1="22" x2="14" y2="26" stroke="#6366f1" stroke-width="1.2"/>
+                <line x1="2" y1="14" x2="6" y2="14" stroke="#6366f1" stroke-width="1.2"/>
+                <line x1="22" y1="14" x2="26" y2="14" stroke="#6366f1" stroke-width="1.2"/>
+            </svg>
+            <div><span class="nav-brand">IMEJE-BKZS</span><span class="nav-sub">GNSS Anti-Spoofing</span></div>
+        </a>
+        <div class="nav-links">
+            <a href="index.html" class="nav-link">Simulasyon</a>
+            <a href="model.html" class="nav-link active">Model</a>
+            <a href="logs.html" class="nav-link">Loglar</a>
+        </div>
+        <div class="nav-indicator"><span class="indicator-dot" style="background:#10b981"></span><span>Aktif</span></div>
+    </nav>
+
+    <main class="main">
+
+        <section class="page-header">
+            <h1 class="page-title">CRNN Model Mimarisi & Egitim</h1>
+            <p class="page-desc">Conv1D + Bidirectional LSTM tabanli GNSS spoofing tespit modeli — 30 zaman adimli kayar pencere ile ikili siniflandirma</p>
+        </section>
+
+        <!-- Performance Summary -->
+        <section class="perf-grid">
+            <div class="perf-card">
+                <span class="perf-val text-green" id="perf-acc">98.2%</span>
+                <span class="perf-label">Accuracy</span>
+            </div>
+            <div class="perf-card">
+                <span class="perf-val text-green" id="perf-prec">97.8%</span>
+                <span class="perf-label">Precision</span>
+            </div>
+            <div class="perf-card">
+                <span class="perf-val text-amber" id="perf-rec">96.5%</span>
+                <span class="perf-label">Recall</span>
+            </div>
+            <div class="perf-card">
+                <span class="perf-val text-purple" id="perf-f1">97.1%</span>
+                <span class="perf-label">F1 Score</span>
+            </div>
+            <div class="perf-card">
+                <span class="perf-val text-blue" id="perf-auc">99.4%</span>
+                <span class="perf-label">AUC-ROC</span>
+            </div>
+        </section>
+
+        <!-- Architecture + Params -->
+        <section class="model-grid">
+            <div class="card">
+                <div class="card-header"><h2 class="card-title">Mimari Akis</h2></div>
+                <div class="card-body">
+                    <div class="arch-flow">
+                        <div class="arch-block arch-input">
+                            <span class="ab-title">Input</span>
+                            <span class="ab-detail">(30, 6)</span>
+                            <span class="ab-sub">30 zaman adimi × 6 feature</span>
+                        </div>
+                        <div class="arch-arrow">↓</div>
+                        <div class="arch-block arch-conv">
+                            <span class="ab-title">Conv1D</span>
+                            <span class="ab-detail">64 filtre, kernel=5</span>
+                            <span class="ab-sub">+ BatchNorm + ReLU</span>
+                        </div>
+                        <div class="arch-arrow">↓</div>
+                        <div class="arch-block arch-conv">
+                            <span class="ab-title">Conv1D</span>
+                            <span class="ab-detail">128 filtre, kernel=3</span>
+                            <span class="ab-sub">+ BatchNorm + MaxPool(2) + Dropout(0.3)</span>
+                        </div>
+                        <div class="arch-arrow">↓</div>
+                        <div class="arch-block arch-lstm">
+                            <span class="ab-title">Bidirectional LSTM</span>
+                            <span class="ab-detail">128 unite</span>
+                            <span class="ab-sub">Cift yonlu + Dropout(0.4)</span>
+                        </div>
+                        <div class="arch-arrow">↓</div>
+                        <div class="arch-block arch-dense">
+                            <span class="ab-title">Dense Katmanlar</span>
+                            <span class="ab-detail">64 → 1</span>
+                            <span class="ab-sub">ReLU + BN + Dropout(0.3) → Sigmoid</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><h2 class="card-title">Egitim Parametreleri</h2></div>
+                <div class="card-body">
+                    <div class="param-list">
+                        <div class="param-row"><span class="pk">Optimizer</span><span class="pv">Adam (lr=0.001)</span></div>
+                        <div class="param-row"><span class="pk">Loss Fonksiyonu</span><span class="pv">Binary Crossentropy</span></div>
+                        <div class="param-row"><span class="pk">Batch Size</span><span class="pv">1024</span></div>
+                        <div class="param-row"><span class="pk">Maksimum Epoch</span><span class="pv">30</span></div>
+                        <div class="param-row"><span class="pk">Early Stopping</span><span class="pv">patience=5, restore_best</span></div>
+                        <div class="param-row"><span class="pk">LR Scheduler</span><span class="pv">ReduceOnPlateau (f=0.5, p=3)</span></div>
+                        <div class="param-row"><span class="pk">Validation Split</span><span class="pv">%15</span></div>
+                        <div class="param-row"><span class="pk">Sliding Window</span><span class="pv">30 adim (TIME_STEPS)</span></div>
+                        <div class="param-row"><span class="pk">Karar Esigi</span><span class="pv">0.50</span></div>
+                        <div class="param-row"><span class="pk">Olcekleme</span><span class="pv">StandardScaler (pkl)</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Training Graphs -->
+        <section class="card">
+            <div class="card-header"><h2 class="card-title">Egitim Grafikleri</h2></div>
+            <div class="card-body">
+                <div class="graphs-grid">
+                    <div class="graph-box">
+                        <h3 class="graph-title">Loss Egrisi (Train vs Validation)</h3>
+                        <canvas id="chart-loss" class="graph-canvas"></canvas>
+                    </div>
+                    <div class="graph-box">
+                        <h3 class="graph-title">Accuracy Egrisi (Train vs Validation)</h3>
+                        <canvas id="chart-acc" class="graph-canvas"></canvas>
+                    </div>
+                    <div class="graph-box">
+                        <h3 class="graph-title">Feature Onem Sirasi (Ortalama)</h3>
+                        <canvas id="chart-importance" class="graph-canvas"></canvas>
+                    </div>
+                    <div class="graph-box">
+                        <h3 class="graph-title">Tahmin Dagilimi (Normal vs Spoofing)</h3>
+                        <canvas id="chart-dist" class="graph-canvas"></canvas>
+                    </div>
+                </div>
+                <p class="graph-note" id="graph-note"></p>
+            </div>
+        </section>
+
+        <!-- Feature Table -->
+        <section class="card">
+            <div class="card-header"><h2 class="card-title">Giris Feature Tablosu (NAV-SAT Kaynak)</h2></div>
+            <div class="card-body">
+                <table class="feat-table">
+                    <thead>
+                        <tr><th>#</th><th>Feature</th><th>Aciklama</th><th>Birim</th><th>Kaynak</th><th>Spoofing Etkisi</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>1</td><td class="ft-name">mean_prRes</td><td>Ortalama pseudorange hatasi</td><td>m</td><td>NAV-SAT prRes</td><td class="text-red">↑ Artar</td></tr>
+                        <tr><td>2</td><td class="ft-name">std_prRes</td><td>Pseudorange hata standart sapmasi</td><td>m</td><td>NAV-SAT prRes</td><td class="text-red">↑ Artar</td></tr>
+                        <tr><td>3</td><td class="ft-name">max_prRes</td><td>Maksimum anlik pseudorange sapmasi</td><td>m</td><td>NAV-SAT prRes</td><td class="text-red">↑↑ Cok Artar</td></tr>
+                        <tr><td>4</td><td class="ft-name">mean_cno</td><td>Ortalama sinyal gucu (C/N0)</td><td>dBHz</td><td>NAV-SAT cno</td><td class="text-amber">~ Degisken</td></tr>
+                        <tr><td>5</td><td class="ft-name">std_cno</td><td>Sinyal gucu standart sapmasi</td><td>—</td><td>NAV-SAT cno</td><td class="text-red">↓ Azalir</td></tr>
+                        <tr><td>6</td><td class="ft-name">cno_elev_ratio</td><td>Sinyal / yukseklik acisi orani</td><td>—</td><td>cno/elev</td><td class="text-red">Bozulur</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Spoofing Info -->
+        <section class="card">
+            <div class="card-header"><h2 class="card-title">GNSS Spoofing Hakkinda</h2></div>
+            <div class="card-body info-content">
+                <p>GNSS Spoofing, saldirganin sahte uydu sinyalleri yayarak alicinin konum, zaman ve hiz hesaplamalarini manipule ettigi bir siber saldiri turudur. Otonom araclar, havacilik ve kritik altyapilar icin ciddi tehdit olusturur.</p>
+                <div class="info-grid">
+                    <div class="info-card info-card-red">
+                        <h4>Saldiri Belirtileri</h4>
+                        <ul>
+                            <li>Pseudorange hatalarinda ani ve buyuk artis</li>
+                            <li>Sinyal gucunde (C/N0) anormal tekduzelik</li>
+                            <li>Uydu geometrisinde tutarsizlik</li>
+                            <li>Sinyal/yukseklik oraninda sistematik bozulma</li>
+                            <li>Birden fazla uydu icin esanli sapma</li>
+                        </ul>
+                    </div>
+                    <div class="info-card info-card-green">
+                        <h4>CRNN Modeli Nasil Tespit Eder?</h4>
+                        <ul>
+                            <li>30 saniyelik kayar pencere uzerinde cok boyutlu analiz</li>
+                            <li>Conv1D katmanlari ile yerel oruntu cikarimi</li>
+                            <li>BiLSTM ile uzun vadeli zamansal bagimliliklarin ogrenilmesi</li>
+                            <li>6 farkli feature'in birlikte degerlendirilmesi</li>
+                            <li>0-1 arasi olasilik skoru ile esik tabanli karar</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="model.js"></script>
+</body>
+</html>
