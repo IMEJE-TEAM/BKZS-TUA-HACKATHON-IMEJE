@@ -12,6 +12,10 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 import tensorflow as tf
 tf.get_logger().setLevel('ERROR')
 
+# Render 512MB OOM Hatasını engellemek için TensorFlow'u aşırı kısıtlıyoruz
+tf.config.threading.set_inter_op_parallelism_threads(1)
+tf.config.threading.set_intra_op_parallelism_threads(1)
+
 app = FastAPI(title="IMEJE-BKZS Anti-Spoofing Web Service")
 
 # CORS izinleri (GitHub Pages üzerinden React/HTML dosyalarının bağlanmasına izin verir)
@@ -37,7 +41,9 @@ def precompute(model, scaled, ts):
     # Orijinal simulation.py dosyasındaki tahmin algoritması mantığı
     windows = np.lib.stride_tricks.sliding_window_view(scaled, (ts, nf))
     windows = windows.reshape(nw, ts, nf)
-    preds = model.predict(windows, batch_size=4096, verbose=0).flatten()
+    # Aşırı yüksek batch_size (4096) OOM (Out of Memory) hatasına yol açar.
+    # Bu yüzden batch_size'ı 64'e çekiyoruz, çok az gecikir ama RAM'i patlatmaz.
+    preds = model.predict(windows, batch_size=64, verbose=0).flatten()
     probs[ts - 1:] = preds
     return probs
 
