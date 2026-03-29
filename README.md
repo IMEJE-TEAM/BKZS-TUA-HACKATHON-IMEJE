@@ -48,14 +48,14 @@ Projeyi yerel ortamınızda çalıştırmak için:
 
 ## 🛰️ Canlı Demo
 Projenin çalışan versiyonunu incelemek için:  
-👉 [imeje Canlı Web Linki](BURAYA_SITE_LINKINI_YAPISTIRIN)
+👉 [imeje Canlı Web Linki](https://imeje-team.github.io/BKZS-TUA-HACKATHON-IMEJE/website/index.html)
 
 ---
 
 ## 👥 Ekibimiz
 
 * **[Arda ÖZTÜRK]** - [Captain] [Rol: Frontend Developer]
-* **[Osman Fadıl ELİYATKIN]** - [Rol: Backend Developer]
+* **[Osman Fadıl ELİYATKIN]** - [Rol: Frontend Developer]
 * **[Mehmet Akif YILDIRIMLI]** - [Rol: Backend Developer]
 * **[Emirhan HARPUT]** - [Rol: Data Scientist]
 * **[Naim Furkan ŞAHİN]** - [Rol: Data Scientist]
