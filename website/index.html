@@ -229,6 +229,114 @@
                 </div>
             </section>
             <section class="card">
+                <div class="card-header"><h2 class="card-title">Model Analiz Grafikleri</h2><span class="card-badge">Gercek Egitim Ciktilari</span></div>
+                <div class="card-body">
+                    <div class="analysis-grid">
+
+                        <div class="analysis-card">
+                            <div class="analysis-img-wrap">
+                                <img src="roccurve.png" alt="ROC Egrisi" class="analysis-img">
+                            </div>
+                            <div class="analysis-info">
+                                <h4 class="analysis-title">ROC Egrisi</h4>
+                                <span class="analysis-badge" style="background:var(--purple-dim);color:var(--purple)">AUC: 0.96</span>
+                                <p class="analysis-desc">Modelin ayirt edici gucunu olcer. Egri sol ust koseye ne kadar yakinsa model o kadar basarilidir. AUC degeri, modelin rastgele bir veriyi dogru siniflandirma olasiligini temsil eder.</p>
+                            </div>
+                        </div>
+
+                        <div class="analysis-card">
+                            <div class="analysis-img-wrap">
+                                <img src="PrecisionRecallCurve.png" alt="Hassasiyet-Duyarlilik Egrisi" class="analysis-img">
+                            </div>
+                            <div class="analysis-info">
+                                <h4 class="analysis-title">Hassasiyet-Duyarlilik Egrisi</h4>
+                                <span class="analysis-badge" style="background:var(--green-dim);color:var(--green)">Guvenlik Odakli</span>
+                                <p class="analysis-desc">Guvenlik projelerinde modelin ne kadar titiz oldugunu gosterir. AP degeri; saldiri dediginde ne kadar hakli oldugunu (Precision) ve toplam saldirilardan kacini yakaladigi (Recall) ozetler.</p>
+                            </div>
+                        </div>
+
+                        <div class="analysis-card">
+                            <div class="analysis-img-wrap">
+                                <img src="PredictionProbability.png" alt="Tahmin Olasiligi Dagilimi" class="analysis-img">
+                            </div>
+                            <div class="analysis-info">
+                                <h4 class="analysis-title">Tahmin Olasiligi Dagilimi</h4>
+                                <span class="analysis-badge" style="background:var(--blue-dim);color:var(--blue)">Karar Kararliligi</span>
+                                <p class="analysis-desc">Modelin verdigi kararlardan ne kadar emin oldugunu gorsellestirir. Skorlarin 0.0 ve 1.0 uclarinda yogunlasmasi, modelin net ve kararli calistigi anlamina gelir.</p>
+                            </div>
+                        </div>
+
+                        <div class="analysis-card">
+                            <div class="analysis-img-wrap">
+                                <img src="FeatureImportance.png" alt="Oznitelik Onem Derecesi" class="analysis-img">
+                            </div>
+                            <div class="analysis-info">
+                                <h4 class="analysis-title">Oznitelik Onem Derecesi</h4>
+                                <span class="analysis-badge" style="background:var(--amber-dim);color:var(--amber)">Aciklanabilirlik</span>
+                                <p class="analysis-desc">Modelin karar verirken hangi veriye daha cok guvedigini aciklar. En uzun cubuk, spoofing tespitinde en kritik olcumu gosterir. Sistemin kara kutu olmadigi ve mantikli fiziksel verilere dayandigini ispatlar.</p>
+                            </div>
+                        </div>
+
+                        <div class="analysis-card">
+                            <div class="analysis-img-wrap">
+                                <img src="tahminolasilikdagilimi.png" alt="Egitim Loss ve Accuracy" class="analysis-img">
+                            </div>
+                            <div class="analysis-info">
+                                <h4 class="analysis-title">Egitim ve Dogrulama Grafikleri</h4>
+                                <span class="analysis-badge" style="background:var(--green-dim);color:var(--green)">Saglikli Ogrenme</span>
+                                <p class="analysis-desc">Epoch arttikca hatanin (Loss) dusmesi ve dogrulugun (Accuracy) artmasi gerekir. Egitim ve validasyon cizgilerinin birbirine yakin gitmesi, modelin veriyi ezberlemedigi anlamina gelir.</p>
+                            </div>
+                        </div>
+
+                        <div class="analysis-card">
+                            <div class="analysis-img-wrap">
+                                <img src="RegionalAnalysis.png" alt="Bolgesel Zaman Serisi Analizi" class="analysis-img">
+                            </div>
+                            <div class="analysis-info">
+                                <h4 class="analysis-title">Bolgesel Zaman Serisi Analizi</h4>
+                                <span class="analysis-badge" style="background:var(--red-dim);color:var(--red)">Tepki Hizi</span>
+                                <p class="analysis-desc">Saldirinin basladigi ve bittigi anlarda modelin tepki hizini olcer. Gercek etiketler ile tahminlerin ne kadar ortustugunu gosterir. Saldiri baslangicinda anlik tepkiyi kanitlamak icin kullanilir.</p>
+                            </div>
+                        </div>
+
+                        <div class="analysis-card">
+                            <div class="analysis-img-wrap">
+                                <img src="Featuredistribution.png" alt="Oznitelik Dagilim Analizi" class="analysis-img">
+                            </div>
+                            <div class="analysis-info">
+                                <h4 class="analysis-title">Oznitelik Dagilim Analizi</h4>
+                                <span class="analysis-badge" style="background:var(--purple-dim);color:var(--purple)">Veri Farki</span>
+                                <p class="analysis-desc">Normal sinyal ile sahte sinyal arasindaki veri farkini kutu grafikleriyle (box plots) gosterir. Kutularin birbirinden uzakligi, o ozniteligi saldiriyi yakalamak icin ne kadar ayirici oldugunu ifade eder.</p>
+                            </div>
+                        </div>
+
+                        <div class="analysis-card">
+                            <div class="analysis-img-wrap">
+                                <img src="ErrorAnalysis.png" alt="Hata Analizi Zaman Cizelgesi" class="analysis-img">
+                            </div>
+                            <div class="analysis-info">
+                                <h4 class="analysis-title">Hata Analizi Zaman Cizelgesi</h4>
+                                <span class="analysis-badge" style="background:var(--amber-dim);color:var(--amber)">Gecis Anlari</span>
+                                <p class="analysis-desc">Modelin yaptigini nadir hatalarin hangi zaman dilimlerinde gerceklestigi gosterilir. Hatalar genellikle saldirilarin tam gecis anlarin da (baslangic/bitis) olur; sistem stabil durumda cok guvenilir calisir.</p>
+                            </div>
+                        </div>
+
+                        <div class="analysis-card">
+                            <div class="analysis-img-wrap">
+                                <img src="IntensityAnalysis.png" alt="Siddet Seviyesi Performansi" class="analysis-img">
+                            </div>
+                            <div class="analysis-info">
+                                <h4 class="analysis-title">Siddet Seviyesi Performansi</h4>
+                                <span class="analysis-badge" style="background:var(--red-dim);color:var(--red)">Zorlu Kosullar</span>
+                                <p class="analysis-desc">Modelin farkli zorluktaki (sinsi vs. belirgin) saldirilara karsi basarisini olcer. 0.10 siddetindeki en zayif saldirilardan 0.70 gucundeki saldirilarakadar basari oranini gosterir.</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <section class="card">
                 <div class="card-header"><h2 class="card-title">Giris Feature Tablosu (NAV-SAT Kaynak)</h2></div>
                 <div class="card-body">
                     <table class="feat-table">
