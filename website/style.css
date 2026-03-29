@@ -1,17 +1,19 @@
-/* ======================================================================
-   IMEJE-BKZS GNSS Anti-Spoofing — Soft Dark Theme + Terminal Logs
-   ====================================================================== */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+.page-wrap{display:none}
+.page-wrap.active{display:block}
+#page-logs.active{display:flex!important;flex-direction:column;height:calc(100vh - 62px);overflow:hidden}
+#page-logs .main{flex:1;display:flex;flex-direction:column;overflow:hidden;padding-bottom:0}
+#page-logs .term-card{flex:1;min-height:0}
 :root{
-  --bg:#e4e7ec;
-  --surface:#f0f2f6;
-  --surface2:#e8eaef;
-  --surface3:#dde0e7;
-  --border:#c8ced8;
-  --border2:#b0b8c4;
-  --txt:#5a6577;
-  --txt-hi:#1e293b;
-  --heading:#0f172a;
+  --bg:#c7cddc;
+  --surface:#d6dce9;
+  --surface2:#ced4e2;
+  --surface3:#bec5d6;
+  --border:#a5adc2;
+  --border2:#929bb4;
+  --txt:#3d4a5e;
+  --txt-hi:#0f172a;
+  --heading:#060b14;
   --green:#10b981;
   --green-dim:rgba(16,185,129,.12);
   --green-bg:rgba(16,185,129,.07);
@@ -25,7 +27,7 @@
   --purple-bg:rgba(99,102,241,.06);
   --blue:#3b82f6;
   --blue-dim:rgba(59,130,246,.10);
-  /* Terminal colors */
+  
   --term-bg:#1e1e2e;
   --term-surface:#252537;
   --term-border:#313244;
@@ -49,34 +51,35 @@ a{color:inherit;text-decoration:none}
 button{cursor:pointer;font-family:inherit}
 table{border-collapse:collapse}
 
-/* ── Navbar ───────────────────────────────────────────────────────── */
 .navbar{
   display:flex;align-items:center;justify-content:space-between;
-  padding:0 32px;height:58px;
+  padding:0 32px;height:62px;
   background:var(--surface);
   border-bottom:1px solid var(--border);
   position:sticky;top:0;z-index:100;
-  box-shadow:0 1px 4px rgba(0,0,0,.06);
+  box-shadow:0 2px 8px rgba(0,0,0,.10);
 }
 .nav-logo{display:flex;align-items:center;gap:11px}
-.nav-brand{font-size:.95rem;font-weight:800;color:var(--heading);display:block;line-height:1.2;letter-spacing:-.3px}
-.nav-sub{font-size:.6rem;color:var(--txt);letter-spacing:.6px;text-transform:uppercase;font-weight:500}
-.nav-links{display:flex;gap:4px}
+.nav-brand{font-size:1rem;font-weight:800;color:var(--heading);display:block;line-height:1.2;letter-spacing:-.3px}
+.nav-sub{font-size:.62rem;color:var(--txt);letter-spacing:.6px;text-transform:uppercase;font-weight:500}
+.nav-links{display:flex;gap:6px}
 .nav-link{
-  padding:8px 18px;border-radius:var(--radius-sm);
-  font-size:.82rem;font-weight:500;color:var(--txt);
+  padding:10px 26px;border-radius:var(--radius);
+  font-size:.92rem;font-weight:600;color:var(--txt);
   transition:all var(--transition);
+  border:1px solid transparent;
 }
-.nav-link:hover{color:var(--txt-hi);background:var(--surface2)}
-.nav-link.active{color:var(--purple);background:var(--purple-dim);font-weight:600}
+.nav-link:hover{color:var(--txt-hi);background:var(--surface2);border-color:var(--border)}
+.nav-link.active{color:#fff;background:var(--purple);font-weight:700;border-color:var(--purple);box-shadow:0 2px 10px rgba(99,102,241,.3)}
 .nav-indicator{display:flex;align-items:center;gap:7px;font-size:.73rem;color:var(--txt);font-weight:500}
 .indicator-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px rgba(16,185,129,.4);animation:pulse-dot 2s infinite}
 @keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:.35}}
+.conn-badge{display:none;padding:2px 10px;border-radius:10px;font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-right:8px}
+.conn-badge.live{display:inline-block;background:var(--green);color:#fff;animation:pulse-dot 2s infinite}
+.conn-badge.offline{display:inline-block;background:#6b7280;color:#fff}
 
-/* ── Main ─────────────────────────────────────────────────────────── */
 .main{padding:20px 28px 40px;max-width:1480px;margin:0 auto}
 
-/* ── Card ─────────────────────────────────────────────────────────── */
 .card{
   background:var(--surface);
   border:1px solid var(--border);
@@ -93,12 +96,10 @@ table{border-collapse:collapse}
 .card-title{font-size:.85rem;font-weight:700;color:var(--heading)}
 .card-body{padding:16px 20px}
 
-/* ── Page header ──────────────────────────────────────────────────── */
 .page-header{margin-bottom:20px}
 .page-title{font-size:1.3rem;font-weight:800;color:var(--heading);margin-bottom:4px;letter-spacing:-.4px}
 .page-desc{font-size:.8rem;color:var(--txt);line-height:1.5}
 
-/* ── Stat Cards Row ───────────────────────────────────────────────── */
 .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
 .stat-card{
   background:var(--surface);border:1px solid var(--border);
@@ -117,10 +118,9 @@ table{border-collapse:collapse}
 .stat-card-label{font-size:.66rem;color:var(--txt);text-transform:uppercase;letter-spacing:.5px;font-weight:600;margin-top:2px}
 .stat-card-bar{height:4px;border-radius:2px;background:var(--surface3);margin-top:8px;overflow:hidden}
 .stat-card-bar-fill{height:100%;border-radius:2px;transition:width .4s ease}
-/* Metric description tooltip */
+
 .stat-card-desc{font-size:.64rem;color:var(--txt);margin-top:4px;line-height:1.4;opacity:.85}
 
-/* ── Top Row (3 cols) ─────────────────────────────────────────────── */
 .top-row{display:grid;grid-template-columns:1fr 1.5fr auto;gap:14px;margin-bottom:14px}
 .card-progress .progress-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
 .progress-title{font-size:.78rem;color:var(--txt);font-weight:500}
@@ -129,7 +129,6 @@ table{border-collapse:collapse}
 .progress-bar-fill{height:100%;width:0%;border-radius:4px;background:linear-gradient(90deg,var(--purple),var(--blue));transition:width .3s ease}
 .progress-detail{font-size:.7rem;color:var(--txt);margin-top:6px;font-weight:500}
 
-/* Metrics mini */
 .metrics-grid{display:flex;gap:20px;align-items:stretch}
 .mg-item{flex:1;text-align:center}
 .mg-val{display:block;font-size:1.2rem;font-weight:800;color:var(--heading);font-variant-numeric:tabular-nums}
@@ -140,7 +139,6 @@ table{border-collapse:collapse}
 .mg-rec{background:var(--amber)}
 .mg-f1{background:var(--purple)}
 
-/* Confusion matrix */
 .card-cm-mini{min-width:155px}
 .cm-table{width:100%;font-size:.73rem;text-align:center}
 .cm-table th{padding:5px 8px;color:var(--txt);font-weight:700}
@@ -151,36 +149,38 @@ table{border-collapse:collapse}
 .cm-fp{background:var(--red-dim);color:var(--red)}
 .cm-fn{background:var(--amber-dim);color:var(--amber)}
 
-/* ── Alarm ────────────────────────────────────────────────────────── */
 #alarm{overflow:hidden;border-radius:var(--radius);margin-bottom:14px;transition:all .3s ease}
 #alarm.alarm-on{background:linear-gradient(90deg,rgba(239,68,68,.10),rgba(239,68,68,.04));border:1px solid rgba(239,68,68,.3);padding:10px 20px}
 #alarm.alarm-on .alarm-text{display:flex;align-items:center;gap:10px;font-size:.82rem;font-weight:700;color:var(--red);animation:alarm-blink .8s infinite}
 @keyframes alarm-blink{0%,100%{opacity:1}50%{opacity:.4}}
 
-/* ── Hero / Pre-sim state ─────────────────────────────────────────── */
-.hero-section{text-align:center;padding:28px 20px 20px}
-.hero-logo{width:180px;height:auto;margin-bottom:16px;filter:drop-shadow(0 4px 12px rgba(0,0,0,.15));transition:all .7s cubic-bezier(.4,0,.2,1)}
-.hero-title{font-size:1.6rem;font-weight:800;color:var(--heading);margin-bottom:6px;letter-spacing:-.5px}
-.hero-sub{font-size:.82rem;color:var(--txt);margin-bottom:20px}
+.hero-section{text-align:center;padding:40px 20px 28px}
+.hero-logo{width:280px;height:auto;margin-bottom:24px;filter:drop-shadow(0 6px 20px rgba(0,0,0,.2));transition:all .9s cubic-bezier(.4,0,.2,1)}
+.hero-title{font-size:2.1rem;font-weight:800;color:var(--heading);margin-bottom:10px;letter-spacing:-.5px}
+.hero-sub{font-size:1rem;color:var(--txt);margin-bottom:28px;line-height:1.6}
 .hero-btn{
-  display:inline-flex;align-items:center;gap:8px;
-  padding:12px 32px;border-radius:var(--radius);
-  background:var(--purple);color:#fff;font-size:.9rem;font-weight:700;
-  border:none;box-shadow:0 4px 16px rgba(99,102,241,.3);
-  transition:all .2s;cursor:pointer;
+  display:inline-flex;align-items:center;gap:10px;
+  padding:16px 44px;border-radius:var(--radius);
+  background:linear-gradient(135deg,var(--purple),#818cf8);color:#fff;font-size:1.05rem;font-weight:700;
+  border:none;box-shadow:0 6px 24px rgba(99,102,241,.35);
+  transition:all .25s;cursor:pointer;letter-spacing:.3px;
 }
-.hero-btn:hover{filter:brightness(1.08);box-shadow:0 6px 24px rgba(99,102,241,.4);transform:translateY(-1px)}
+.hero-btn:hover{filter:brightness(1.1);box-shadow:0 8px 32px rgba(99,102,241,.45);transform:translateY(-2px) scale(1.02)}
 .hero-btn:disabled{opacity:.45;cursor:not-allowed;filter:none;box-shadow:none;transform:none}
 
-/* Logo fly-up animation */
-@keyframes logoFlyUp{
-  0%{opacity:1;transform:translateY(0) scale(1)}
-  60%{opacity:1;transform:translateY(-30px) scale(1.05)}
-  100%{opacity:0;transform:translateY(-80px) scale(.7)}
+@keyframes logoLaunch{
+  0%{opacity:1;transform:translateY(0) scale(1) rotate(0deg);filter:drop-shadow(0 6px 20px rgba(0,0,0,.2))}
+  30%{opacity:1;transform:translateY(10px) scale(1.15) rotate(-2deg);filter:drop-shadow(0 12px 32px rgba(99,102,241,.4))}
+  60%{opacity:1;transform:translateY(-60px) scale(1.1) rotate(1deg);filter:drop-shadow(0 20px 40px rgba(99,102,241,.5))}
+  100%{opacity:0;transform:translateY(-200px) scale(.4) rotate(0deg);filter:drop-shadow(0 0 0 transparent)}
 }
-.logo-fly-out{animation:logoFlyUp .6s cubic-bezier(.4,0,.2,1) forwards}
+@keyframes heroFadeOut{
+  0%{opacity:1;transform:translateY(0)}
+  100%{opacity:0;transform:translateY(20px)}
+}
+.logo-fly-out{animation:logoLaunch .9s cubic-bezier(.4,0,.2,1) forwards}
+.hero-fade-out .hero-title,.hero-fade-out .hero-sub,.hero-fade-out .hero-btn,.hero-fade-out .presim-grid{animation:heroFadeOut .5s ease forwards}
 
-/* Pre-sim grid */
 .presim-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
 .presim-info-list{display:flex;flex-direction:column;gap:6px}
 .presim-info-item{display:flex;align-items:center;gap:8px;font-size:.76rem;color:var(--txt-hi);padding:6px 10px;border-radius:var(--radius-xs);background:var(--surface2);border:1px solid var(--border)}
@@ -188,7 +188,6 @@ table{border-collapse:collapse}
 .presim-info-item .pi-label{font-weight:600;min-width:80px}
 .presim-info-item .pi-val{color:var(--txt);font-weight:500}
 
-/* ── Simulation card ──────────────────────────────────────────────── */
 .sim-legend{display:flex;gap:16px;align-items:center}
 .lg{display:flex;align-items:center;gap:5px;font-size:.72rem;color:var(--txt);font-weight:500}
 .lg-dot{width:9px;height:9px;border-radius:50%;display:inline-block}
@@ -198,7 +197,6 @@ table{border-collapse:collapse}
 .spinner{width:34px;height:34px;border-radius:50%;border:3px solid var(--border);border-top-color:var(--purple);animation:spin .75s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-/* Sim layout: charts left, side panel right */
 .sim-body{display:grid;grid-template-columns:1fr 280px;gap:0}
 .sim-charts{padding:12px 16px;border-right:1px solid var(--border)}
 .sim-side{padding:12px 16px;display:flex;flex-direction:column;gap:10px;max-height:600px;overflow-y:auto}
@@ -220,7 +218,6 @@ table{border-collapse:collapse}
 .sf-status{font-size:.72rem;color:var(--txt);font-weight:500}
 .speed-val{font-size:.8rem;font-weight:800;color:var(--purple);min-width:35px;text-align:center}
 
-/* Mini log panel (sidebar) */
 .mini-log-title{font-size:.7rem;font-weight:700;color:var(--heading);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
 .mini-log-feed{display:flex;flex-direction:column;gap:3px;max-height:240px;overflow-y:auto;padding-right:4px}
 .mini-log-feed::-webkit-scrollbar{width:3px}
@@ -237,7 +234,6 @@ table{border-collapse:collapse}
 .mini-log-prob{margin-left:auto;font-weight:700;font-variant-numeric:tabular-nums}
 @keyframes slideIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
 
-/* Feature distribution (sidebar) */
 .dist-title{font-size:.7rem;font-weight:700;color:var(--heading);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
 .dist-bar-row{display:flex;align-items:center;gap:6px;margin-bottom:3px}
 .dist-bar-label{font-size:.6rem;font-weight:600;color:var(--txt);width:54px;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -245,7 +241,6 @@ table{border-collapse:collapse}
 .dist-bar-fill{height:100%;border-radius:3px;transition:width .5s ease}
 .dist-bar-val{font-size:.6rem;font-weight:700;color:var(--heading);width:30px;font-variant-numeric:tabular-nums}
 
-/* ── Buttons ──────────────────────────────────────────────────────── */
 .btn{
   padding:7px 16px;border-radius:var(--radius-sm);font-size:.78rem;font-weight:600;
   border:1px solid var(--border);background:var(--surface);color:var(--txt-hi);
@@ -261,7 +256,6 @@ table{border-collapse:collapse}
 .btn-danger{background:var(--red);border-color:transparent;color:#fff}
 .btn-success{background:var(--green);border-color:transparent;color:#fff}
 
-/* ── Model page ───────────────────────────────────────────────────── */
 .model-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
 .arch-flow{display:flex;flex-direction:column;align-items:center;gap:0;padding:12px 0}
 .arch-block{
@@ -283,14 +277,12 @@ table{border-collapse:collapse}
 .arch-dense .ab-detail{color:var(--red)}
 .arch-arrow{font-size:1.2rem;color:var(--border2);padding:2px 0}
 
-/* Param list */
 .param-list{display:flex;flex-direction:column}
 .param-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border)}
 .param-row:last-child{border-bottom:none}
 .pk{font-size:.76rem;color:var(--txt);font-weight:500}
 .pv{font-size:.76rem;color:var(--heading);font-weight:700;font-variant-numeric:tabular-nums}
 
-/* Performance summary cards */
 .perf-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:14px}
 .perf-card{
   text-align:center;padding:14px 12px;
@@ -300,7 +292,6 @@ table{border-collapse:collapse}
 .perf-val{font-size:1.25rem;font-weight:800;display:block;letter-spacing:-.3px}
 .perf-label{font-size:.6rem;color:var(--txt);text-transform:uppercase;letter-spacing:.4px;font-weight:600;margin-top:2px;display:block}
 
-/* Feature table */
 .feat-table{width:100%;font-size:.76rem}
 .feat-table th{padding:9px 12px;text-align:left;color:var(--txt);font-weight:700;border-bottom:2px solid var(--border);font-size:.66rem;text-transform:uppercase;letter-spacing:.5px}
 .feat-table td{padding:9px 12px;border-bottom:1px solid var(--border)}
@@ -308,14 +299,12 @@ table{border-collapse:collapse}
 .feat-table tr:hover td{background:var(--surface2)}
 .ft-name{font-weight:700;color:var(--purple);font-family:'Cascadia Code','Fira Code','JetBrains Mono',monospace;font-size:.73rem}
 
-/* Graphs grid */
 .graphs-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .graph-box{background:var(--surface2);border-radius:var(--radius);padding:14px;border:1px solid var(--border)}
 .graph-title{font-size:.76rem;font-weight:700;color:var(--heading);margin-bottom:10px}
-.graph-canvas{width:100%;height:200px;display:block;border-radius:var(--radius-sm)}
+.graph-canvas{width:100%;height:240px;display:block;border-radius:var(--radius-sm)}
 .graph-note{font-size:.72rem;color:var(--txt);margin-top:14px;text-align:center;font-weight:500}
 
-/* Info cards */
 .info-content p{font-size:.82rem;color:var(--txt-hi);margin-bottom:16px;line-height:1.7}
 .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .info-card{padding:18px 20px;border-radius:var(--radius);border:1px solid var(--border)}
@@ -330,7 +319,6 @@ table{border-collapse:collapse}
 .info-card-green h4{color:var(--green)}
 .info-card-green li::before{background:var(--green)}
 
-/* ── Logs page — VS Code Terminal Style ───────────────────────────── */
 .logs-page{display:flex;flex-direction:column;height:calc(100vh - 58px);overflow:hidden}
 .logs-page .main{flex:1;display:flex;flex-direction:column;overflow:hidden;padding-bottom:0}
 
@@ -344,7 +332,6 @@ table{border-collapse:collapse}
 }
 .logs-toolbar select:focus,.logs-toolbar input:focus{outline:none;border-color:var(--purple);box-shadow:0 0 0 3px var(--purple-dim)}
 
-/* Terminal-like log stream */
 .term-card{
   flex:1;display:flex;flex-direction:column;
   background:var(--term-bg);border:1px solid var(--term-border);
@@ -377,7 +364,6 @@ table{border-collapse:collapse}
 .term-body::-webkit-scrollbar-thumb{background:var(--term-border);border-radius:3px}
 .term-body::-webkit-scrollbar-thumb:hover{background:#45475a}
 
-/* Terminal log entries */
 .tl-entry{padding:2px 0;display:flex;gap:6px;animation:termFadeIn .15s ease-out}
 @keyframes termFadeIn{from{opacity:0;transform:translateY(2px)}to{opacity:1;transform:translateY(0)}}
 .tl-time{color:var(--term-dim);min-width:64px;flex-shrink:0}
@@ -391,12 +377,10 @@ table{border-collapse:collapse}
 .tl-data .tl-prob-high{color:var(--term-red);font-weight:700}
 .tl-data .tl-prob-low{color:var(--term-green);font-weight:700}
 
-/* Terminal empty state */
 .term-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;color:var(--term-dim);text-align:center;gap:8px;padding:40px}
 .term-empty p{font-size:.78rem;line-height:1.5}
 .term-prompt{color:var(--term-green)}
 
-/* Log summary cards */
 .log-summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px;flex-shrink:0}
 .log-summary-card{
   text-align:center;padding:12px 10px;
@@ -408,24 +392,19 @@ table{border-collapse:collapse}
 .lsc-bar{height:3px;border-radius:2px;background:var(--surface3);margin-top:6px;overflow:hidden}
 .lsc-bar-fill{height:100%;border-radius:2px;transition:width .4s ease}
 
-/* Toolbar extras */
 .toolbar-sep{display:inline-block;width:1px;height:22px;background:var(--border);margin:0 4px}
 .toolbar-right{margin-left:auto;display:flex;align-items:center;gap:12px;font-size:.7rem;color:var(--txt)}
 .toolbar-right label{display:flex;align-items:center;gap:4px;cursor:pointer}
 .kbd-hint{font-size:.62rem;color:var(--txt);opacity:.7}
 
-/* Stream dot */
 .stream-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--border2);margin-right:6px;transition:background .3s}
 .stream-dot.active{background:var(--green);box-shadow:0 0 8px rgba(16,185,129,.5);animation:pulse-dot 1.2s infinite}
 
-/* Card badge */
 .card-badge{font-size:.64rem;font-weight:700;color:var(--purple);background:var(--purple-dim);padding:3px 10px;border-radius:var(--radius-xs);font-variant-numeric:tabular-nums}
 
-/* Log timeline */
 .log-timeline{height:70px;background:var(--surface2);border-radius:var(--radius-sm);overflow:hidden;position:relative;border:1px solid var(--border)}
 .log-timeline canvas{width:100%;height:100%;display:block}
 
-/* ── Utility ──────────────────────────────────────────────────────── */
 .text-green{color:var(--green)}.text-red{color:var(--red)}.text-purple{color:var(--purple)}.text-amber{color:var(--amber)}.text-blue{color:var(--blue)}
 .divider{height:1px;background:var(--border);margin:10px 0}
 .tooltip{position:relative}
@@ -434,7 +413,6 @@ table{border-collapse:collapse}
 .kbd{display:inline-block;padding:2px 6px;border:1px solid var(--border);border-radius:3px;font-size:.65rem;font-family:monospace;background:var(--surface2);color:var(--txt)}
 .hidden{display:none!important}
 
-/* ── Responsive ───────────────────────────────────────────────────── */
 @media(max-width:1200px){
   .sim-body{grid-template-columns:1fr}
   .sim-side{border-top:1px solid var(--border);border-right:none;max-height:none}

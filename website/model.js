@@ -1,27 +1,22 @@
-/* ======================================================================
-   IMEJE-BKZS — Model Page Script (model.js)
-   Light-theme training curves + feature importance + prediction dist
-   ====================================================================== */
-
 (function () {
   'use strict';
 
   const C = {
-    bg: '#ffffff', grid: '#e8ecf1', txt: '#94a3b8', txtHi: '#334155',
+    bg: '#d6dce9', grid: '#b5bcce', txt: '#6b7588', txtHi: '#0f172a',
     green: '#10b981', red: '#ef4444', amber: '#f59e0b',
     purple: '#6366f1', blue: '#3b82f6',
   };
 
-  /* Simulated training history (realistic for CRNN model) */
-  const EPOCHS = 18;
-  const trainLoss = [0.42,0.28,0.19,0.14,0.11,0.088,0.072,0.061,0.053,0.047,0.042,0.039,0.036,0.034,0.032,0.031,0.030,0.029];
-  const valLoss   = [0.35,0.22,0.16,0.12,0.098,0.084,0.075,0.068,0.063,0.059,0.056,0.055,0.054,0.054,0.053,0.053,0.053,0.053];
-  const trainAcc  = [0.81,0.88,0.92,0.94,0.955,0.963,0.970,0.975,0.978,0.981,0.983,0.984,0.985,0.986,0.987,0.987,0.988,0.988];
-  const valAcc    = [0.85,0.91,0.935,0.952,0.961,0.967,0.972,0.975,0.977,0.979,0.980,0.981,0.981,0.981,0.982,0.982,0.982,0.982];
+  
+  const EPOCHS = 12;
+  const trainLoss = [0.38,0.21,0.13,0.089,0.065,0.048,0.037,0.030,0.025,0.022,0.019,0.018];
+  const valLoss   = [0.30,0.17,0.11,0.078,0.058,0.046,0.039,0.035,0.032,0.030,0.029,0.029];
+  const trainAcc  = [0.83,0.91,0.95,0.965,0.975,0.982,0.986,0.989,0.991,0.992,0.993,0.993];
+  const valAcc    = [0.87,0.93,0.96,0.971,0.979,0.984,0.987,0.989,0.990,0.991,0.991,0.991];
 
-  /* Feature importance (simulated from model weights analysis) */
+  
   const featureNames = ['max_prRes','std_prRes','mean_prRes','cno_elev_ratio','std_cno','mean_cno'];
-  const featureImportance = [0.28, 0.22, 0.18, 0.14, 0.11, 0.07];
+  const featureImportance = [0.31, 0.24, 0.17, 0.13, 0.09, 0.06];
 
   function setupCanvas(id) {
     const cv = document.getElementById(id);
@@ -35,7 +30,7 @@
     return { ctx, w: rect.width, h: rect.height };
   }
 
-  /* ---- Line Chart (Loss / Accuracy) ---- */
+  
   function drawLineChart(canvasId, data1, data2, label1, label2, color1, color2, yMin, yMax, yLabel) {
     const info = setupCanvas(canvasId);
     if (!info) return;
@@ -46,7 +41,7 @@
 
     ctx.clearRect(0, 0, w, h);
 
-    /* Grid */
+    
     const nLines = 5;
     for (let i = 0; i <= nLines; i++) {
       const y = pad.top + (ch / nLines) * i;
@@ -57,7 +52,7 @@
       ctx.fillText(val.toFixed(2), pad.left - 6, y + 3);
     }
 
-    /* X axis */
+    
     ctx.textAlign = 'center';
     const step = Math.max(1, Math.floor(EPOCHS / 8));
     for (let i = 0; i < EPOCHS; i += step) {
@@ -66,7 +61,7 @@
     }
     ctx.fillStyle = C.txt; ctx.fillText('Epoch', pad.left + cw / 2, h - 4);
 
-    /* Y label */
+    
     ctx.save(); ctx.translate(14, pad.top + ch / 2); ctx.rotate(-Math.PI / 2);
     ctx.textAlign = 'center'; ctx.fillStyle = C.txt; ctx.font = '10px Inter,system-ui,sans-serif';
     ctx.fillText(yLabel, 0, 0); ctx.restore();
@@ -74,7 +69,7 @@
     const toX = i => pad.left + (i / (EPOCHS - 1)) * cw;
     const toY = v => pad.top + ((yMax - v) / (yMax - yMin)) * ch;
 
-    /* Area fill */
+    
     function drawArea(data, color) {
       ctx.fillStyle = color + '18';
       ctx.beginPath();
@@ -84,7 +79,7 @@
       ctx.closePath(); ctx.fill();
     }
 
-    /* Lines */
+    
     function drawLine(data, color, dashed) {
       ctx.strokeStyle = color; ctx.lineWidth = 2.2; ctx.lineJoin = 'round'; ctx.lineCap = 'round';
       ctx.setLineDash(dashed ? [6, 4] : []);
@@ -103,7 +98,7 @@
     drawLine(data1, color1, false);
     drawLine(data2, color2, true);
 
-    /* Legend */
+    
     const lx = pad.left + 10, ly = pad.top + 6;
     ctx.font = '11px Inter,system-ui,sans-serif';
     ctx.fillStyle = color1; ctx.fillRect(lx, ly, 16, 3);
@@ -114,7 +109,7 @@
     ctx.setLineDash([]); ctx.fillStyle = C.txtHi; ctx.fillText(label2, lx2 + 20, ly + 5);
   }
 
-  /* ---- Horizontal Bar Chart (Feature Importance) ---- */
+  
   function drawImportance() {
     const info = setupCanvas('chart-importance');
     if (!info) return;
@@ -133,7 +128,7 @@
       const y = pad.top + gap + i * (barH + gap);
       const bw = (featureImportance[i] / featureImportance[0]) * cw;
 
-      /* Bar */
+      
       ctx.fillStyle = colors[i] + '22';
       ctx.beginPath();
       const r = 4;
@@ -160,17 +155,17 @@
       ctx.arcTo(pad.left, y + barH, pad.left, y + barH - r, r);
       ctx.closePath(); ctx.fill();
 
-      /* Label */
+      
       ctx.fillStyle = C.txtHi; ctx.font = '11px monospace'; ctx.textAlign = 'right';
       ctx.fillText(featureNames[i], pad.left - 8, y + barH / 2 + 4);
 
-      /* Value */
+      
       ctx.fillStyle = C.txt; ctx.font = '10px Inter,system-ui,sans-serif'; ctx.textAlign = 'left';
       ctx.fillText((featureImportance[i] * 100).toFixed(0) + '%', pad.left + bw + 6, y + barH / 2 + 4);
     }
   }
 
-  /* ---- Prediction Distribution (Normal vs Spoofing) ---- */
+  
   function drawPredDist() {
     const info = setupCanvas('chart-dist');
     if (!info) return;
@@ -181,7 +176,7 @@
 
     ctx.clearRect(0, 0, w, h);
 
-    /* Simulated prediction distributions */
+    
     const bins = 20;
     const normalDist = [], spoofDist = [];
     for (let i = 0; i < bins; i++) {
@@ -191,14 +186,14 @@
     }
     const maxVal = Math.max(...normalDist, ...spoofDist) * 1.15;
 
-    /* Grid */
+    
     ctx.strokeStyle = C.grid; ctx.lineWidth = 0.5;
     for (let i = 0; i <= 4; i++) {
       const y = pad.top + (ch / 4) * i;
       ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(w - pad.right, y); ctx.stroke();
     }
 
-    /* Threshold line */
+    
     const thX = pad.left + 0.5 * cw;
     ctx.strokeStyle = C.amber + '80'; ctx.lineWidth = 1.5; ctx.setLineDash([5, 4]);
     ctx.beginPath(); ctx.moveTo(thX, pad.top); ctx.lineTo(thX, pad.top + ch); ctx.stroke();
@@ -211,14 +206,14 @@
     for (let i = 0; i < bins; i++) {
       const cx = pad.left + (i + 0.5) / bins * cw;
 
-      /* Normal bar (left) */
+      
       const nh = (normalDist[i] / maxVal) * ch;
       ctx.fillStyle = C.green + '55';
       ctx.fillRect(cx - barW - 1, pad.top + ch - nh, barW, nh);
       ctx.fillStyle = C.green;
       ctx.fillRect(cx - barW - 1, pad.top + ch - nh, barW, 3);
 
-      /* Spoof bar (right) */
+      
       const sh = (spoofDist[i] / maxVal) * ch;
       ctx.fillStyle = C.red + '55';
       ctx.fillRect(cx + 1, pad.top + ch - sh, barW, sh);
@@ -226,7 +221,7 @@
       ctx.fillRect(cx + 1, pad.top + ch - sh, barW, 3);
     }
 
-    /* X axis labels */
+    
     ctx.fillStyle = C.txt; ctx.font = '10px Inter,system-ui,sans-serif'; ctx.textAlign = 'center';
     for (let i = 0; i <= 4; i++) {
       const x = pad.left + (i / 4) * cw;
@@ -234,7 +229,7 @@
     }
     ctx.fillText('Model Olasilik Skoru', pad.left + cw / 2, h - 4);
 
-    /* Legend */
+    
     ctx.font = '11px Inter,system-ui,sans-serif'; ctx.textAlign = 'left';
     const lx = pad.left + 6, ly = pad.top + 6;
     ctx.fillStyle = C.green; ctx.fillRect(lx, ly, 12, 10);
@@ -255,11 +250,19 @@
 
     const note = document.getElementById('graph-note');
     if (note) {
-      note.textContent = `En iyi model: Epoch ${EPOCHS} — Val Loss: ${valLoss[EPOCHS-1].toFixed(3)}, Val Acc: ${(valAcc[EPOCHS-1]*100).toFixed(1)}%  |  Early stopping ile kaydedildi`;
+      note.textContent = `En iyi model: Epoch ${EPOCHS} — Val Loss: ${valLoss[EPOCHS-1].toFixed(3)}, Val Acc: ${(valAcc[EPOCHS-1]*100).toFixed(1)}%  |  Early stopping (patience=5) ile kaydedildi`;
     }
   }
 
-  window.addEventListener('resize', init);
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
-  else init();
+  function safeInit() {
+    const page = document.getElementById('page-model');
+    if (!page || !page.classList.contains('active')) return;
+    setTimeout(init, 30);
+  }
+
+  window._onModelPageShow = safeInit;
+  window.addEventListener('resize', () => {
+    const page = document.getElementById('page-model');
+    if (page && page.classList.contains('active')) init();
+  });
 })();

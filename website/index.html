@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IMEJE-BKZS | Canli Simulasyon</title>
+    <title>IMEJE-BKZS | GNSS Anti-Spoofing</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- Navbar -->
     <nav class="navbar">
-        <a href="index.html" class="nav-logo">
+        <a href="#" class="nav-logo" onclick="showPage('sim','nav-sim');return false;">
             <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
                 <circle cx="14" cy="14" r="12" stroke="#6366f1" stroke-width="2" fill="none"/>
                 <circle cx="14" cy="14" r="6" stroke="#10b981" stroke-width="1.5" fill="none"/>
@@ -26,166 +25,315 @@
             </div>
         </a>
         <div class="nav-links">
-            <a href="index.html" class="nav-link active">Simulasyon</a>
-            <a href="model.html" class="nav-link">Model</a>
-            <a href="logs.html" class="nav-link">Loglar</a>
+            <a href="#" class="nav-link active" id="nav-sim" onclick="showPage('sim','nav-sim');return false;">Simulasyon</a>
+            <a href="#" class="nav-link" id="nav-model" onclick="showPage('model','nav-model');return false;">Model</a>
+            <a href="#" class="nav-link" id="nav-logs" onclick="showPage('logs','nav-logs');return false;">Loglar</a>
         </div>
+        <span class="conn-badge" id="connection-status"></span>
         <div class="nav-indicator" id="nav-indicator">
             <span class="indicator-dot"></span>
             <span>Hazir</span>
         </div>
     </nav>
 
-    <main class="main">
-
-        <!-- Stat Cards -->
-        <section class="stats-row">
-            <div class="stat-card">
-                <div class="stat-card-icon purple">📊</div>
-                <span class="stat-card-val" id="s-processed">0</span>
-                <span class="stat-card-label">Islenen Satir</span>
-                <div class="stat-card-bar"><div class="stat-card-bar-fill" id="s-processed-bar" style="background:var(--purple)"></div></div>
-                <div class="stat-card-desc">Modelin isledigini toplam veri sayisi</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-card-icon green">✓</div>
-                <span class="stat-card-val" id="s-precision">0.000</span>
-                <span class="stat-card-label">Precision</span>
-                <div class="stat-card-bar"><div class="stat-card-bar-fill" id="s-precision-bar" style="background:var(--green)"></div></div>
-                <div class="stat-card-desc">Spoofing dediginin kaci gercekten spoofing</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-card-icon amber">◎</div>
-                <span class="stat-card-val" id="s-recall">0.000</span>
-                <span class="stat-card-label">Recall</span>
-                <div class="stat-card-bar"><div class="stat-card-bar-fill" id="s-recall-bar" style="background:var(--amber)"></div></div>
-                <div class="stat-card-desc">Gercek saldirilardan kaci yakalandi</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-card-icon blue">⚡</div>
-                <span class="stat-card-val" id="s-f1">0.000</span>
-                <span class="stat-card-label">F1 Score</span>
-                <div class="stat-card-bar"><div class="stat-card-bar-fill" id="s-f1-bar" style="background:var(--blue)"></div></div>
-                <div class="stat-card-desc">Precision ve Recall'in harmonik ortalamasi</div>
-            </div>
-        </section>
-
-        <!-- Alarm -->
-        <div id="alarm"></div>
-
-        <!-- Pre-sim: Hero + dashboard content -->
-        <div id="presim-area">
-            <section class="hero-section">
-                <img src="imeje.png" alt="IMEJE Logo" class="hero-logo" id="hero-logo">
-                <h1 class="hero-title">GNSS Anti-Spoofing Simulasyonu</h1>
-                <p class="hero-sub">CRNN tabanli derin ogrenme modeli ile gercek zamanli spoofing tespiti</p>
-                <button class="hero-btn" id="btn-start">▶ Simulasyonu Baslat</button>
-            </section>
-
-            <section class="presim-grid">
-                <div class="card">
-                    <div class="card-header"><h2 class="card-title">Model Ozeti</h2></div>
-                    <div class="card-body">
-                        <div class="presim-info-list">
-                            <div class="presim-info-item"><span class="pi-dot" style="background:var(--purple)"></span><span class="pi-label">Mimari</span><span class="pi-val">Conv1D + BiLSTM (CRNN)</span></div>
-                            <div class="presim-info-item"><span class="pi-dot" style="background:var(--green)"></span><span class="pi-label">Zaman Adimi</span><span class="pi-val">30 ardisik olcum</span></div>
-                            <div class="presim-info-item"><span class="pi-dot" style="background:var(--amber)"></span><span class="pi-label">Esik Degeri</span><span class="pi-val">0.50 (sigmoid cikis)</span></div>
-                            <div class="presim-info-item"><span class="pi-dot" style="background:var(--blue)"></span><span class="pi-label">Egitim</span><span class="pi-val">10 epoch, Adam optimizer</span></div>
-                            <div class="presim-info-item"><span class="pi-dot" style="background:var(--red)"></span><span class="pi-label">Veri Seti</span><span class="pi-val">30,000 test verisi</span></div>
-                        </div>
-                    </div>
+    <div id="page-sim" class="page-wrap active">
+        <main class="main">
+            <section class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-card-icon purple">&#x1F4CA;</div>
+                    <span class="stat-card-val" id="s-processed">0</span>
+                    <span class="stat-card-label">Islenen Satir</span>
+                    <div class="stat-card-bar"><div class="stat-card-bar-fill" id="s-processed-bar" style="background:var(--purple)"></div></div>
+                    <div class="stat-card-desc">Modelin isledigini toplam veri sayisi</div>
                 </div>
-                <div class="card">
-                    <div class="card-header"><h2 class="card-title">GNSS Ozellikleri (6 Feature)</h2></div>
-                    <div class="card-body">
-                        <div class="presim-info-list">
-                            <div class="presim-info-item"><span class="pi-dot" style="background:var(--purple)"></span><span class="pi-label">mean_prRes</span><span class="pi-val">Pseudorange residual ortalamasi</span></div>
-                            <div class="presim-info-item"><span class="pi-dot" style="background:var(--green)"></span><span class="pi-label">std_prRes</span><span class="pi-val">Pseudorange residual std sapmasi</span></div>
-                            <div class="presim-info-item"><span class="pi-dot" style="background:var(--amber)"></span><span class="pi-label">max_prRes</span><span class="pi-val">Pseudorange residual maksimumi</span></div>
-                            <div class="presim-info-item"><span class="pi-dot" style="background:var(--blue)"></span><span class="pi-label">mean_cno</span><span class="pi-val">Ortalama sinyal-gurultu orani</span></div>
-                            <div class="presim-info-item"><span class="pi-dot" style="background:var(--red)"></span><span class="pi-label">std_cno</span><span class="pi-val">CNO standart sapmasi</span></div>
-                            <div class="presim-info-item"><span class="pi-dot" style="background:var(--purple)"></span><span class="pi-label">cno_elev</span><span class="pi-val">CNO / yukseklik aci orani</span></div>
-                        </div>
-                    </div>
+                <div class="stat-card">
+                    <div class="stat-card-icon green">&#x2713;</div>
+                    <span class="stat-card-val" id="s-precision">0.000</span>
+                    <span class="stat-card-label">Precision</span>
+                    <div class="stat-card-bar"><div class="stat-card-bar-fill" id="s-precision-bar" style="background:var(--green)"></div></div>
+                    <div class="stat-card-desc">Spoofing dediginin kaci gercekten spoofing</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-icon amber">&#x25CE;</div>
+                    <span class="stat-card-val" id="s-recall">0.000</span>
+                    <span class="stat-card-label">Recall</span>
+                    <div class="stat-card-bar"><div class="stat-card-bar-fill" id="s-recall-bar" style="background:var(--amber)"></div></div>
+                    <div class="stat-card-desc">Gercek saldirilardan kaci yakalandi</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-icon blue">&#x26A1;</div>
+                    <span class="stat-card-val" id="s-f1">0.000</span>
+                    <span class="stat-card-label">F1 Score</span>
+                    <div class="stat-card-bar"><div class="stat-card-bar-fill" id="s-f1-bar" style="background:var(--blue)"></div></div>
+                    <div class="stat-card-desc">Precision ve Recall'un harmonik ortalamasi</div>
                 </div>
             </section>
-        </div>
 
-        <!-- Simulation Area (hidden until start) -->
-        <section class="card card-sim" id="sim-section" style="display:none;">
-            <div class="card-header">
-                <h2 class="card-title">Canli GNSS Simulasyonu</h2>
-                <div class="card-header-right">
-                    <div class="sim-legend">
-                        <span class="lg"><span class="lg-dot" style="background:#10b981"></span>Normal</span>
-                        <span class="lg"><span class="lg-dot" style="background:#ef4444"></span>Spoofing</span>
-                        <span class="lg"><span class="lg-dot" style="background:#6366f1"></span>Model</span>
-                        <span class="lg"><span class="lg-line"></span>Esik (0.50)</span>
-                    </div>
-                </div>
-            </div>
+            <div id="alarm"></div>
 
-            <div id="loading" class="sim-placeholder" style="display:none;">
-                <div class="spinner"></div>
-                <p>Veri yukleniyor...</p>
-            </div>
-
-            <!-- Sim body: charts + side panel -->
-            <div id="sim-body" class="sim-body" style="display:none;">
-                <div class="sim-charts">
-                    <div id="charts"></div>
-                </div>
-                <div class="sim-side">
-                    <!-- Progress -->
-                    <div>
-                        <div class="progress-header">
-                            <span class="progress-title">Ilerleme</span>
-                            <span class="progress-pct" id="progress-pct">0%</span>
+            <div id="presim-area">
+                <section class="hero-section">
+                    <img src="imeje.png" alt="IMEJE Logo" class="hero-logo" id="hero-logo">
+                    <h1 class="hero-title">GNSS Anti-Spoofing Simulasyonu</h1>
+                    <p class="hero-sub">CRNN tabanli derin ogrenme modeli ile gercek zamanli spoofing tespiti</p>
+                    <button class="hero-btn" id="btn-start">&#x25B6; Simulasyonu Baslat</button>
+                </section>
+                <section class="presim-grid">
+                    <div class="card">
+                        <div class="card-header"><h2 class="card-title">Model Ozeti</h2></div>
+                        <div class="card-body">
+                            <div class="presim-info-list">
+                                <div class="presim-info-item"><span class="pi-dot" style="background:var(--purple)"></span><span class="pi-label">Mimari</span><span class="pi-val">Conv1D + BiLSTM (CRNN)</span></div>
+                                <div class="presim-info-item"><span class="pi-dot" style="background:var(--green)"></span><span class="pi-label">Zaman Adimi</span><span class="pi-val">30 ardisik olcum</span></div>
+                                <div class="presim-info-item"><span class="pi-dot" style="background:var(--amber)"></span><span class="pi-label">Esik Degeri</span><span class="pi-val">0.50 (sigmoid cikis)</span></div>
+                                <div class="presim-info-item"><span class="pi-dot" style="background:var(--blue)"></span><span class="pi-label">Egitim</span><span class="pi-val">12 epoch, Adam optimizer</span></div>
+                                <div class="presim-info-item"><span class="pi-dot" style="background:var(--red)"></span><span class="pi-label">Veri Seti</span><span class="pi-val">30,000 test verisi</span></div>
+                            </div>
                         </div>
-                        <div class="progress-bar-track"><div class="progress-bar-fill" id="progress-fill"></div></div>
-                        <div class="progress-detail" id="progress-detail">0 / 30,000</div>
                     </div>
-                    <div class="divider"></div>
-                    <!-- Confusion Matrix -->
-                    <div>
-                        <div class="mini-log-title">Confusion Matrix</div>
-                        <table class="cm-table">
-                            <thead><tr><th></th><th>Tahmin:N</th><th>Tahmin:S</th></tr></thead>
-                            <tbody>
-                                <tr><td class="cm-rl">Gercek:N</td><td class="cm-c cm-tn" id="cm-tn">0</td><td class="cm-c cm-fp" id="cm-fp">0</td></tr>
-                                <tr><td class="cm-rl">Gercek:S</td><td class="cm-c cm-fn" id="cm-fn">0</td><td class="cm-c cm-tp" id="cm-tp">0</td></tr>
-                            </tbody>
-                        </table>
+                    <div class="card">
+                        <div class="card-header"><h2 class="card-title">GNSS Ozellikleri (6 Feature)</h2></div>
+                        <div class="card-body">
+                            <div class="presim-info-list">
+                                <div class="presim-info-item"><span class="pi-dot" style="background:var(--purple)"></span><span class="pi-label">mean_prRes</span><span class="pi-val">Pseudorange residual ortalamasi</span></div>
+                                <div class="presim-info-item"><span class="pi-dot" style="background:var(--green)"></span><span class="pi-label">std_prRes</span><span class="pi-val">Pseudorange residual std sapmasi</span></div>
+                                <div class="presim-info-item"><span class="pi-dot" style="background:var(--amber)"></span><span class="pi-label">max_prRes</span><span class="pi-val">Pseudorange residual maksimumu</span></div>
+                                <div class="presim-info-item"><span class="pi-dot" style="background:var(--blue)"></span><span class="pi-label">mean_cno</span><span class="pi-val">Ortalama sinyal-gurultu orani</span></div>
+                                <div class="presim-info-item"><span class="pi-dot" style="background:var(--red)"></span><span class="pi-label">std_cno</span><span class="pi-val">CNO standart sapmasi</span></div>
+                                <div class="presim-info-item"><span class="pi-dot" style="background:var(--purple)"></span><span class="pi-label">cno_elev</span><span class="pi-val">CNO / yukseklik aci orani</span></div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="divider"></div>
-                    <!-- Feature distributions -->
-                    <div>
-                        <div class="dist-title">Feature Dagilimi</div>
-                        <div id="dist-bars"></div>
+                </section>
+            </div>
+
+            <section class="card card-sim" id="sim-section" style="display:none;">
+                <div class="card-header">
+                    <h2 class="card-title">Canli GNSS Simulasyonu</h2>
+                    <div class="card-header-right">
+                        <div class="sim-legend">
+                            <span class="lg"><span class="lg-dot" style="background:#10b981"></span>Normal</span>
+                            <span class="lg"><span class="lg-dot" style="background:#ef4444"></span>Spoofing</span>
+                            <span class="lg"><span class="lg-dot" style="background:#6366f1"></span>Model</span>
+                            <span class="lg"><span class="lg-line"></span>Esik (0.50)</span>
+                        </div>
                     </div>
-                    <div class="divider"></div>
-                    <!-- Mini log feed -->
-                    <div>
-                        <div class="mini-log-title">Son Olaylar</div>
-                        <div class="mini-log-feed" id="mini-log-feed"></div>
+                </div>
+                <div id="loading" class="sim-placeholder" style="display:none;">
+                    <div class="spinner"></div>
+                    <p>Veri yukleniyor...</p>
+                </div>
+                <div id="sim-body" class="sim-body" style="display:none;">
+                    <div class="sim-charts">
+                        <div id="charts"></div>
+                    </div>
+                    <div class="sim-side">
+                        <div>
+                            <div class="progress-header">
+                                <span class="progress-title">Ilerleme</span>
+                                <span class="progress-pct" id="progress-pct">0%</span>
+                            </div>
+                            <div class="progress-bar-track"><div class="progress-bar-fill" id="progress-fill"></div></div>
+                            <div class="progress-detail" id="progress-detail">0 / 30,000</div>
+                        </div>
+                        <div class="divider"></div>
+                        <div>
+                            <div class="mini-log-title">Confusion Matrix</div>
+                            <table class="cm-table">
+                                <thead><tr><th></th><th>Tahmin:N</th><th>Tahmin:S</th></tr></thead>
+                                <tbody>
+                                    <tr><td class="cm-rl">Gercek:N</td><td class="cm-c cm-tn" id="cm-tn">0</td><td class="cm-c cm-fp" id="cm-fp">0</td></tr>
+                                    <tr><td class="cm-rl">Gercek:S</td><td class="cm-c cm-fn" id="cm-fn">0</td><td class="cm-c cm-tp" id="cm-tp">0</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="divider"></div>
+                        <div>
+                            <div class="dist-title">Feature Dagilimi</div>
+                            <div id="dist-bars"></div>
+                        </div>
+                    </div>
+                </div>
+                <div id="sim-footer" class="sim-footer" style="display:none;">
+                    <div class="sf-left">
+                        <button class="btn btn-sm" id="btn-pause">&#x23F8; Duraklat</button>
+                        <button class="btn btn-sm" id="btn-speed-down">&#x2212;</button>
+                        <span class="speed-val" id="speed-display">5x</span>
+                        <button class="btn btn-sm" id="btn-speed-up">+</button>
+                        <button class="btn btn-sm btn-outline" id="btn-reset">&#x21BA; Sifirla</button>
+                    </div>
+                    <span class="sf-status" id="sim-status-text"></span>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div id="page-model" class="page-wrap">
+        <main class="main">
+            <section class="page-header">
+                <h1 class="page-title">CRNN Model Mimarisi &amp; Egitim</h1>
+                <p class="page-desc">Conv1D + Bidirectional LSTM tabanli GNSS spoofing tespit modeli — 30 zaman adimli kayar pencere ile ikili siniflandirma</p>
+            </section>
+            <section class="perf-grid">
+                <div class="perf-card"><span class="perf-val text-green" id="perf-acc">99.1%</span><span class="perf-label">Accuracy</span></div>
+                <div class="perf-card"><span class="perf-val text-green" id="perf-prec">99.3%</span><span class="perf-label">Precision</span></div>
+                <div class="perf-card"><span class="perf-val text-amber" id="perf-rec">98.8%</span><span class="perf-label">Recall</span></div>
+                <div class="perf-card"><span class="perf-val text-purple" id="perf-f1">99.0%</span><span class="perf-label">F1 Score</span></div>
+                <div class="perf-card"><span class="perf-val text-blue" id="perf-auc">99.8%</span><span class="perf-label">AUC-ROC</span></div>
+            </section>
+            <section class="model-grid">
+                <div class="card">
+                    <div class="card-header"><h2 class="card-title">Mimari Akis</h2></div>
+                    <div class="card-body">
+                        <div class="arch-flow">
+                            <div class="arch-block arch-input"><span class="ab-title">Input</span><span class="ab-detail">(30, 6)</span><span class="ab-sub">30 zaman adimi x 6 feature</span></div>
+                            <div class="arch-arrow">&#x2193;</div>
+                            <div class="arch-block arch-conv"><span class="ab-title">Conv1D</span><span class="ab-detail">64 filtre, kernel=5</span><span class="ab-sub">+ BatchNorm + ReLU</span></div>
+                            <div class="arch-arrow">&#x2193;</div>
+                            <div class="arch-block arch-conv"><span class="ab-title">Conv1D</span><span class="ab-detail">128 filtre, kernel=3</span><span class="ab-sub">+ BatchNorm + MaxPool(2) + Dropout(0.3)</span></div>
+                            <div class="arch-arrow">&#x2193;</div>
+                            <div class="arch-block arch-lstm"><span class="ab-title">Bidirectional LSTM</span><span class="ab-detail">128 unite</span><span class="ab-sub">Cift yonlu + Dropout(0.4)</span></div>
+                            <div class="arch-arrow">&#x2193;</div>
+                            <div class="arch-block arch-dense"><span class="ab-title">Dense Katmanlar</span><span class="ab-detail">64 &#x2192; 1</span><span class="ab-sub">ReLU + BN + Dropout(0.3) &#x2192; Sigmoid</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><h2 class="card-title">Egitim Parametreleri</h2></div>
+                    <div class="card-body">
+                        <div class="param-list">
+                            <div class="param-row"><span class="pk">Optimizer</span><span class="pv">Adam (lr=0.001)</span></div>
+                            <div class="param-row"><span class="pk">Loss Fonksiyonu</span><span class="pv">Binary Crossentropy</span></div>
+                            <div class="param-row"><span class="pk">Batch Size</span><span class="pv">1024</span></div>
+                            <div class="param-row"><span class="pk">Maksimum Epoch</span><span class="pv">30 (early stop: 12)</span></div>
+                            <div class="param-row"><span class="pk">Early Stopping</span><span class="pv">patience=5, restore_best</span></div>
+                            <div class="param-row"><span class="pk">LR Scheduler</span><span class="pv">ReduceOnPlateau (f=0.5, p=3)</span></div>
+                            <div class="param-row"><span class="pk">Validation Split</span><span class="pv">%15</span></div>
+                            <div class="param-row"><span class="pk">Sliding Window</span><span class="pv">30 adim (TIME_STEPS)</span></div>
+                            <div class="param-row"><span class="pk">Karar Esigi</span><span class="pv">0.50</span></div>
+                            <div class="param-row"><span class="pk">Olcekleme</span><span class="pv">StandardScaler (pkl)</span></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="card">
+                <div class="card-header"><h2 class="card-title">Egitim Grafikleri</h2></div>
+                <div class="card-body">
+                    <div class="graphs-grid">
+                        <div class="graph-box"><h3 class="graph-title">Loss Egrisi (Train vs Validation)</h3><canvas id="chart-loss" class="graph-canvas"></canvas></div>
+                        <div class="graph-box"><h3 class="graph-title">Accuracy Egrisi (Train vs Validation)</h3><canvas id="chart-acc" class="graph-canvas"></canvas></div>
+                        <div class="graph-box"><h3 class="graph-title">Feature Onem Sirasi</h3><canvas id="chart-importance" class="graph-canvas"></canvas></div>
+                        <div class="graph-box"><h3 class="graph-title">Tahmin Dagilimi (Normal vs Spoofing)</h3><canvas id="chart-dist" class="graph-canvas"></canvas></div>
+                    </div>
+                    <p class="graph-note" id="graph-note"></p>
+                </div>
+            </section>
+            <section class="card">
+                <div class="card-header"><h2 class="card-title">Giris Feature Tablosu (NAV-SAT Kaynak)</h2></div>
+                <div class="card-body">
+                    <table class="feat-table">
+                        <thead><tr><th>#</th><th>Feature</th><th>Aciklama</th><th>Birim</th><th>Kaynak</th><th>Spoofing Etkisi</th></tr></thead>
+                        <tbody>
+                            <tr><td>1</td><td class="ft-name">mean_prRes</td><td>Ortalama pseudorange hatasi</td><td>m</td><td>NAV-SAT prRes</td><td class="text-red">&#x2191; Artar</td></tr>
+                            <tr><td>2</td><td class="ft-name">std_prRes</td><td>Pseudorange hata standart sapmasi</td><td>m</td><td>NAV-SAT prRes</td><td class="text-red">&#x2191; Artar</td></tr>
+                            <tr><td>3</td><td class="ft-name">max_prRes</td><td>Maksimum anlik pseudorange sapmasi</td><td>m</td><td>NAV-SAT prRes</td><td class="text-red">&#x2191;&#x2191; Cok Artar</td></tr>
+                            <tr><td>4</td><td class="ft-name">mean_cno</td><td>Ortalama sinyal gucu (C/N0)</td><td>dBHz</td><td>NAV-SAT cno</td><td class="text-amber">~ Degisken</td></tr>
+                            <tr><td>5</td><td class="ft-name">std_cno</td><td>Sinyal gucu standart sapmasi</td><td>dBHz</td><td>NAV-SAT cno</td><td class="text-red">&#x2193; Azalir</td></tr>
+                            <tr><td>6</td><td class="ft-name">cno_elev_ratio</td><td>Sinyal / yukseklik acisi orani</td><td>&#x2014;</td><td>cno/elev</td><td class="text-red">Bozulur</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            <section class="card">
+                <div class="card-header"><h2 class="card-title">GNSS Spoofing Hakkinda</h2></div>
+                <div class="card-body info-content">
+                    <p>GNSS Spoofing, saldirganin sahte uydu sinyalleri yayarak alicinin konum, zaman ve hiz hesaplamalarini manipule ettigi bir siber saldiri turudur. Otonom araclar, havacilik ve kritik altyapilar icin ciddi tehdit olusturur.</p>
+                    <div class="info-grid">
+                        <div class="info-card info-card-red">
+                            <h4>Saldiri Belirtileri</h4>
+                            <ul>
+                                <li>Pseudorange hatalarinda ani ve buyuk artis</li>
+                                <li>Sinyal gucunde (C/N0) anormal tekduzelik</li>
+                                <li>Uydu geometrisinde tutarsizlik</li>
+                                <li>Sinyal/yukseklik oraninda sistematik bozulma</li>
+                                <li>Birden fazla uydu icin esanli sapma</li>
+                            </ul>
+                        </div>
+                        <div class="info-card info-card-green">
+                            <h4>CRNN Modeli Nasil Tespit Eder?</h4>
+                            <ul>
+                                <li>30 saniyelik kayar pencere uzerinde cok boyutlu analiz</li>
+                                <li>Conv1D katmanlari ile yerel oruntu cikarimi</li>
+                                <li>BiLSTM ile uzun vadeli zamansal bagimliliklarin ogrenilmesi</li>
+                                <li>6 farkli feature'in birlikte degerlendirilmesi</li>
+                                <li>0-1 arasi olasilik skoru ile esik tabanli karar</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div id="page-logs" class="page-wrap page-logs-wrap">
+        <main class="main">
+            <section class="log-summary-grid">
+                <div class="log-summary-card"><span class="lsc-val" id="lsc-total">0</span><span class="lsc-label">Islenen Satir</span><div class="lsc-bar"><div class="lsc-bar-fill" id="lsc-bar-total" style="width:0%;background:var(--purple)"></div></div></div>
+                <div class="log-summary-card"><span class="lsc-val text-red" id="lsc-spoof">0</span><span class="lsc-label">Spoofing Tespit</span><div class="lsc-bar"><div class="lsc-bar-fill" id="lsc-bar-spoof" style="width:0%;background:var(--red)"></div></div></div>
+                <div class="log-summary-card"><span class="lsc-val text-green" id="lsc-normal">0</span><span class="lsc-label">Normal Sinyal</span><div class="lsc-bar"><div class="lsc-bar-fill" id="lsc-bar-normal" style="width:0%;background:var(--green)"></div></div></div>
+                <div class="log-summary-card"><span class="lsc-val text-amber" id="lsc-rate">0%</span><span class="lsc-label">Spoofing Orani</span><div class="lsc-bar"><div class="lsc-bar-fill" id="lsc-bar-rate" style="width:0%;background:var(--amber)"></div></div></div>
+            </section>
+            <section class="card" style="flex-shrink:0">
+                <div class="card-body" style="padding:10px 16px">
+                    <div class="logs-toolbar">
+                        <span class="stream-dot" id="stream-dot"></span>
+                        <span style="font-size:.78rem;font-weight:600;color:var(--txt)">Simulasyon basladiginda otomatik akar</span>
+                        <span class="toolbar-sep"></span>
+                        <label for="filter-type">Filtre:</label>
+                        <select id="filter-type">
+                            <option value="all">Tumu</option>
+                            <option value="spoof">Spoofing</option>
+                            <option value="normal">Normal</option>
+                            <option value="transition">Gecisler</option>
+                        </select>
+                        <input type="text" id="filter-search" placeholder="Ara..." style="width:110px">
+                        <span class="toolbar-sep"></span>
+                        <button class="btn btn-sm" id="btn-export">CSV</button>
+                        <button class="btn btn-sm btn-danger" id="btn-clear">Temizle</button>
+                        <span class="toolbar-right">
+                            <label><input type="checkbox" id="chk-autoscroll" checked> Oto-Kaydirma</label>
+                        </span>
+                    </div>
+                </div>
+            </section>
+            <div class="term-card" id="term-card">
+                <div class="term-header">
+                    <div class="term-header-left">
+                        <div class="term-dots">
+                            <span class="term-dot-red"></span>
+                            <span class="term-dot-yellow"></span>
+                            <span class="term-dot-green"></span>
+                        </div>
+                        <span class="term-title">gnss-monitor &#x2014; bash</span>
+                    </div>
+                    <div class="term-header-right">
+                        <span class="term-badge term-badge-purple" id="log-count">0 kayit</span>
+                        <span class="term-badge term-badge-purple" id="timeline-progress">0%</span>
+                    </div>
+                </div>
+                <div class="term-body" id="log-stream">
+                    <div class="term-empty" id="stream-empty">
+                        <span class="term-prompt">$</span>
+                        <p>gnss-monitor --mode=realtime --model=crnn</p>
+                        <p style="color:var(--term-dim)">Simulasyon sayfasindan baslatin &#x2014; loglar otomatik akmaya baslayacak.</p>
                     </div>
                 </div>
             </div>
-
-            <div id="sim-footer" class="sim-footer" style="display:none;">
-                <div class="sf-left">
-                    <button class="btn btn-sm" id="btn-pause">⏸ Duraklat</button>
-                    <button class="btn btn-sm" id="btn-speed-down">−</button>
-                    <span class="speed-val" id="speed-display">5x</span>
-                    <button class="btn btn-sm" id="btn-speed-up">+</button>
-                    <button class="btn btn-sm btn-outline" id="btn-reset">↺ Sifirla</button>
-                </div>
-                <span class="sf-status" id="sim-status-text"></span>
-            </div>
-        </section>
-
-    </main>
+        </main>
+    </div>
 
     <script src="app.js"></script>
+    <script src="model.js"></script>
+    <script src="logs.js"></script>
 </body>
 </html>

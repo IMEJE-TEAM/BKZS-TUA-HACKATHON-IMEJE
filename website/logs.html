@@ -27,6 +27,7 @@
             <a href="model.html" class="nav-link">Model</a>
             <a href="logs.html" class="nav-link active">Loglar</a>
         </div>
+        <span class="conn-badge" id="connection-status"></span>
         <div class="nav-indicator"><span class="indicator-dot" style="background:#10b981"></span><span>Aktif</span></div>
     </nav>
 
@@ -61,17 +62,8 @@
             <section class="card" style="flex-shrink:0">
                 <div class="card-body" style="padding:10px 16px">
                     <div class="logs-toolbar">
-                        <button class="btn btn-primary btn-sm" id="btn-play">▶ Baslat</button>
-                        <button class="btn btn-outline btn-sm" id="btn-pause" disabled>Duraklat</button>
-
-                        <label for="log-speed">Hiz:</label>
-                        <select id="log-speed">
-                            <option value="1">1x</option>
-                            <option value="2">2x</option>
-                            <option value="5" selected>5x</option>
-                            <option value="10">10x</option>
-                            <option value="50">50x</option>
-                        </select>
+                        <span class="stream-dot" id="stream-dot"></span>
+                        <span style="font-size:.78rem;font-weight:600;color:var(--txt)">Simulasyon basladiginda otomatik akar</span>
 
                         <span class="toolbar-sep"></span>
 
@@ -105,7 +97,6 @@
                             <span class="term-dot-green"></span>
                         </div>
                         <span class="term-title">
-                            <span class="stream-dot" id="stream-dot"></span>
                             gnss-monitor — bash
                         </span>
                     </div>
@@ -118,7 +109,7 @@
                     <div class="term-empty" id="stream-empty">
                         <span class="term-prompt">$</span>
                         <p>gnss-monitor --mode=realtime --model=crnn</p>
-                        <p style="color:var(--term-dim)">Log akisini baslatmak icin yukaridaki <b>Baslat</b> butonunu kullanin.</p>
+                        <p style="color:var(--term-dim)">Simulasyon sayfasindan baslatin — loglar otomatik akmaya baslayacak.</p>
                     </div>
                 </div>
             </div>
